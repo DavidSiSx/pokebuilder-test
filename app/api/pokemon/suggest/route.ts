@@ -146,6 +146,14 @@ export async function POST(request: Request) {
     let modeModifiers = "";
     if (config.isLittleCup) modeModifiers += " FORMATO LITTLE CUP (Solo pre-evoluciones nivel 5).";
     if (config.isRandomizer) modeModifiers += " ESTRATEGIAS CAÓTICAS Y RANDOM.";
+    if (config.isMonotype && config.monoTypeSelected) modeModifiers += ` MODO MONOTYPE: TODOS los Pokémon del equipo DEBEN ser de tipo ${config.monoTypeSelected} (al menos como tipo primario o secundario). Es OBLIGATORIO.`;
+    if (config.preferredWeather && config.preferredWeather !== 'none') modeModifiers += ` PRIORIZA clima ${config.preferredWeather}. Incluye un setter de este clima y Pokémon que se beneficien de él.`;
+    if (config.preferredTerrain && config.preferredTerrain !== 'none') modeModifiers += ` PRIORIZA terreno ${config.preferredTerrain}. Incluye un setter de este terreno y Pokémon que se beneficien de él.`;
+    if (config.preferTrickRoom) modeModifiers += " PRIORIZA Trick Room: incluye un setter de Trick Room y Pokémon lentos con alto ataque.";
+    if (config.preferTailwind) modeModifiers += " PRIORIZA Tailwind: incluye un setter de Tailwind y Pokémon que se beneficien del aumento de velocidad.";
+    if (config.teamArchetype === 'offense') modeModifiers += " ARQUETIPO OFENSIVO: Prioriza Pokémon con alto ataque/ataque especial y velocidad. Maximiza damage output.";
+    if (config.teamArchetype === 'balance') modeModifiers += " ARQUETIPO BALANCE: Mezcla atacantes y defensivos. Busca buena cobertura y versatilidad.";
+    if (config.teamArchetype === 'stall') modeModifiers += " ARQUETIPO DEFENSIVO/STALL: Prioriza Pokémon con altas defensas, recuperación y moves de estado/hazards.";
 
     const hasItemClause = config.clauses.some((c: string) => c.toLowerCase().includes('item clause'));
     const itemClauseRule = hasItemClause 
