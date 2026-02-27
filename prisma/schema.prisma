@@ -1,0 +1,123 @@
+// Configuración del generador y la fuente de datos
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- MODELOS PRINCIPALES ---
+
+model Pokemon {
+  id           Int      @id @default(autoincrement())
+  nombre       String   @unique
+  tipo1        String
+  tipo2        String?
+  
+  // Campos tácticos para el Dashboard
+  sprite_url   String?  
+  stats        Json?    
+
+  // Estadísticas Base
+  hp_base      Int
+  atk_base     Int
+  def_base     Int
+  spa_base     Int
+  spd_base     Int
+  spe_base     Int
+
+  // Relaciones
+  builds              BuildCompetitiva[]
+  AnalisisMeta        AnalisisMeta[]
+  AnalisisEstrategico AnalisisEstrategico[]
+}
+
+model Formato {
+  id      Int                @id @default(autoincrement())
+  nombre  String             @unique
+  reglas  String?
+  builds  BuildCompetitiva[]
+}
+
+model Objeto {
+  id      Int                @id @default(autoincrement())
+  nombre  String             @unique
+  builds  BuildCompetitiva[]
+}
+
+model Habilidad {
+  id      Int                @id @default(autoincrement())
+  nombre  String             @unique
+  builds  BuildCompetitiva[]
+}
+
+model Movimiento {
+  id         Int                 @id @default(autoincrement())
+  nombre     String              @unique
+  tipo       String
+  categoria  String              // Physical, Special, Status
+  potencia   Int?                // Añadido para visualización táctica
+  precision  Int?                // Añadido para visualización táctica
+  
+  builds     MovimientoEnBuild[]
+}
+
+// --- MODELOS DE CONSTRUCCIÓN (BUILD) ---
+
+model BuildCompetitiva {
+  id           Int      @id @default(autoincrement())
+  pokemonId    Int
+  formatoId    Int
+  objetoId     Int?
+  habilidadId  Int
+  rol          String
+  naturaleza   String
+  
+  // EVs (Effort Values)
+  ev_hp        Int      @default(0)
+  ev_atk       Int      @default(0)
+  ev_def       Int      @default(0)
+  ev_spa       Int      @default(0)
+  ev_spd       Int      @default(0)
+  ev_spe       Int      @default(0)
+  
+  // Relaciones
+  pokemon      Pokemon             @relation(fields: [pokemonId], references: [id])
+  formato      Formato             @relation(fields: [formatoId], references: [id])
+  objeto       Objeto?             @relation(fields: [objetoId], references: [id])
+  habilidad    Habilidad           @relation(fields: [habilidadId], references: [id])
+  movimientos  MovimientoEnBuild[]
+}
+
+model MovimientoEnBuild {
+  buildId      Int
+  movimientoId Int
+  slot         Int      // Slot 1, 2, 3 o 4
+  
+  build        BuildCompetitiva @relation(fields: [buildId], references: [id])
+  movimiento   Movimiento       @relation(fields: [movimientoId], references: [id])
+
+  @@id([buildId, movimientoId])
+}
+
+// --- MODELOS DE INTELIGENCIA (RAG / VECTORES) ---
+
+model AnalisisMeta {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pokemon_id         Int?
+  formato_nombre     String?
+  perfil_estrategico String?
+  embedding          Unsupported("vector(768)")? // Extensión pgvector para búsqueda semántica
+  
+  Pokemon            Pokemon? @relation(fields: [pokemon_id], references: [id])
+}
+
+model AnalisisEstrategico {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pokemon_id         Int?
+  contenido          String?
+  
+  Pokemon            Pokemon? @relation(fields: [pokemon_id], references: [id])
+}

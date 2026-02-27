@@ -1,0 +1,20 @@
+export const typeChart: Record<string, { strengths: string[], weaknesses: string[], immunities: string[] }> = {
+  normal: { strengths: [], weaknesses: ['lucha'], immunities: ['fantasma'] },
+  fuego: { strengths: ['planta', 'hielo', 'bicho', 'acero'], weaknesses: ['agua', 'tierra', 'roca'], immunities: [] },
+  agua: { strengths: ['fuego', 'tierra', 'roca'], weaknesses: ['eléctrico', 'planta'], immunities: [] },
+  planta: { strengths: ['agua', 'tierra', 'roca'], weaknesses: ['fuego', 'hielo', 'veneno', 'volador', 'bicho'], immunities: [] },
+  eléctrico: { strengths: ['agua', 'volador'], weaknesses: ['tierra'], immunities: [] },
+  hielo: { strengths: ['planta', 'tierra', 'volador', 'dragón'], weaknesses: ['fuego', 'lucha', 'roca', 'acero'], immunities: [] },
+  lucha: { strengths: ['normal', 'hielo', 'roca', 'siniestro', 'acero'], weaknesses: ['volador', 'psíquico', 'hada'], immunities: [] },
+  veneno: { strengths: ['planta', 'hada'], weaknesses: ['tierra', 'psíquico'], immunities: [] },
+  tierra: { strengths: ['fuego', 'eléctrico', 'veneno', 'roca', 'acero'], weaknesses: ['agua', 'planta', 'hielo'], immunities: ['eléctrico'] },
+  volador: { strengths: ['planta', 'lucha', 'bicho'], weaknesses: ['eléctrico', 'hielo', 'roca'], immunities: ['tierra'] },
+  psíquico: { strengths: ['lucha', 'veneno'], weaknesses: ['bicho', 'fantasma', 'siniestro'], immunities: [] },
+  bicho: { strengths: ['planta', 'psíquico', 'siniestro'], weaknesses: ['fuego', 'volador', 'roca'], immunities: [] },
+  roca: { strengths: ['fuego', 'hielo', 'volador', 'bicho'], weaknesses: ['agua', 'planta', 'lucha', 'tierra', 'acero'], immunities: [] },
+  fantasma: { strengths: ['psíquico', 'fantasma'], weaknesses: ['fantasma', 'siniestro'], immunities: ['normal', 'lucha'] },
+  dragón: { strengths: ['dragón'], weaknesses: ['hielo', 'dragón', 'hada'], immunities: [] },
+  siniestro: { strengths: ['psíquico', 'fantasma'], weaknesses: ['lucha', 'bicho', 'hada'], immunities: ['psíquico'] },
+  acero: { strengths: ['hielo', 'roca', 'hada'], weaknesses: ['fuego', 'lucha', 'tierra'], immunities: ['veneno'] },
+  hada: { strengths: ['lucha', 'dragón', 'siniestro'], weaknesses: ['veneno', 'acero'], immunities: ['dragón'] }
+};
