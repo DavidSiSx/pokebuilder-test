@@ -1,37 +1,152 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #1a1a2e;
+  --foreground: #f0f0f0;
+  --card: #16213e;
+  --card-foreground: #f0f0f0;
+  --primary: #dc2626;
+  --primary-foreground: #ffffff;
+  --secondary: #1e3a5f;
+  --secondary-foreground: #f0f0f0;
+  --muted: #0f3460;
+  --muted-foreground: #94a3b8;
+  --accent: #e2e8f0;
+  --accent-foreground: #1a1a2e;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(255,255,255,0.08);
+  --input: #16213e;
+  --ring: #dc2626;
+  --radius: 1rem;
+  --pokeball-red: #dc2626;
+  --pokeball-dark: #991b1b;
+  --pokeball-white: #f8fafc;
+  --pokeball-band: #1e293b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-pokeball-red: var(--pokeball-red);
+  --color-pokeball-dark: var(--pokeball-dark);
+  --color-pokeball-white: var(--pokeball-white);
+  --color-pokeball-band: var(--pokeball-band);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
+
+/* Pokéball background pattern */
+.pokeball-bg {
+  position: relative;
+}
+.pokeball-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(220, 38, 38, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(30, 58, 95, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Pokéball divider line */
+.pokeball-divider {
+  position: relative;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--pokeball-band), transparent);
+}
+.pokeball-divider::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--background);
+  border: 3px solid var(--pokeball-band);
+  box-shadow: 0 0 0 2px var(--background);
+}
+
+/* Custom scrollbar themed */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(220, 38, 38, 0.3);
+  border-radius: 999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(220, 38, 38, 0.5);
+}
+
 @layer utilities {
-  /* Ocultar scrollbar en Chrome, Safari y Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  /* Ocultar scrollbar en IE, Edge y Firefox */
   .no-scrollbar {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
+}
+
+/* Pokéball pulse animation */
+@keyframes pokeball-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+  50% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+}
+.pokeball-pulse {
+  animation: pokeball-pulse 2s ease-in-out infinite;
+}
+
+/* Catch animation */
+@keyframes catch-shake {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+  75% { transform: rotate(-5deg); }
+}
+.catch-shake {
+  animation: catch-shake 0.6s ease-in-out;
+}
+
+/* Sparkle effect for locked Pokémon */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.sparkle {
+  animation: sparkle 1.5s ease-in-out infinite;
 }
