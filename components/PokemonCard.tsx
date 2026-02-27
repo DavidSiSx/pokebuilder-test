@@ -245,7 +245,7 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
 
       {/* Genetics Modal */}
       {isModalOpen && pokemon && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-6 bg-background/80 backdrop-blur-md animate-in fade-in" role="dialog" aria-modal="true" aria-label={`Detalles geneticos de ${pokemon.nombre}`}>
+        <div className="fixed inset-0 z-[9998] flex items-center justify-center p-6 bg-background/80 backdrop-blur-md" style={{ isolation: 'isolate' }} role="dialog" aria-modal="true" aria-label={`Detalles geneticos de ${pokemon.nombre}`} onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
           <div className="bg-card border-2 border-pokeball-red/40 rounded-2xl p-8 max-w-md w-full relative shadow-[0_0_60px_rgba(220,38,38,0.15)] overflow-hidden">
             {/* Top accent */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-pokeball-red/60 to-transparent" />
