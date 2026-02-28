@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { requireAuth } from '@/lib/supabase/apiAuth';
 
 const API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY || "";
 const genAI = new GoogleGenerativeAI(API_KEY);
@@ -69,7 +70,11 @@ async function getLegalMovesFromPokeAPI(pokemonName: string) {
 
 export async function POST(request: Request) {
   try {
-    // 🛡️ 1. PROTECCIÓN DE ORIGEN (CORS Estricto para Producción)
+    // Auth protection
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
+    // 1. PROTECCION DE ORIGEN (CORS Estricto para Produccion)
     const origin = request.headers.get('origin');
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
     
@@ -78,9 +83,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "ACCESO_DENEGADO", message: "Petición no autorizada." }, { status: 403 });
     }
 
-    // 🛡️ 2. PROTECCIÓN CONTRA SPAM (Rate Limiting)
-    const ip = request.headers.get('x-forwarded-for') || 'ip-desconocida';
-    if (isRateLimited(ip)) {
+    // 2. PROTECCION CONTRA SPAM (Rate Limiting por user)
+    const rateLimitKey = user!.id;
+    if (isRateLimited(rateLimitKey)) {
       return NextResponse.json({ 
         error: "DEMASIADAS_PETICIONES", 
         message: "Has superado el límite de escaneos tácticos. Por favor, espera 1 minuto." 
@@ -155,6 +160,29 @@ export async function POST(request: Request) {
     if (config.teamArchetype === 'balance') modeModifiers += " ARQUETIPO BALANCE: Mezcla atacantes y defensivos. Busca buena cobertura y versatilidad.";
     if (config.teamArchetype === 'stall') modeModifiers += " ARQUETIPO DEFENSIVO/STALL: Prioriza Pokémon con altas defensas, recuperación y moves de estado/hazards.";
 
+    // Mechanics modifiers
+    if (config.enableMega) modeModifiers += " MEGA EVOLUTION: Puedes usar hasta 1 Mega Evolution en el equipo. Incluye el item Mega Stone correspondiente (ej: Charizardite X). Solo 1 Pokemon puede Mega Evolucionar por batalla.";
+    if (config.enableGmax) modeModifiers += " GIGANTAMAX: Puedes incluir Pokemon con formas Gigantamax. Indica cuales pueden hacer Gmax en su build.";
+    if (config.enableDynamax && !config.enableGmax) modeModifiers += " DYNAMAX: Dynamax esta habilitado. Considera builds que se beneficien de Max Moves.";
+    if (config.enableZMoves) modeModifiers += " Z-MOVES: Puedes asignar 1 Z-Crystal a un Pokemon del equipo. El item sera el Z-Crystal correspondiente (ej: Flyinium Z). Solo 1 Z-Crystal por equipo.";
+    if (config.enableTera) {
+      if (config.preferredTeraType) {
+        modeModifiers += ` TERACRISTALIZACION ACTIVA: Considera cambiar el tipo de Pokemon a ${config.preferredTeraType} para builds ofensivos/defensivos. Incluye "teraType" en cada build sugiriendo el mejor Tera Type.`;
+      } else {
+        modeModifiers += ` TERACRISTALIZACION ACTIVA: Incluye "teraType" en cada build con el Tera Type mas estrategico para cada Pokemon.`;
+      }
+    }
+
+    // Regional forms
+    const regionalParts: string[] = [];
+    if (config.includeAlola) regionalParts.push("Alola");
+    if (config.includeGalar) regionalParts.push("Galar");
+    if (config.includeHisui) regionalParts.push("Hisui");
+    if (config.includePaldea) regionalParts.push("Paldea");
+    if (regionalParts.length > 0 && regionalParts.length < 4) {
+      modeModifiers += ` FORMAS REGIONALES: Considera variantes regionales de ${regionalParts.join(', ')} si mejoran la sinergia del equipo.`;
+    }
+
     const hasItemClause = config.clauses.some((c: string) => c.toLowerCase().includes('item clause'));
     const itemClauseRule = hasItemClause 
       ? "3. ITEM CLAUSE ACTIVA (¡MUY IMPORTANTE!): ESTÁ TOTALMENTE PROHIBIDO REPETIR OBJETOS. Los 6 Pokémon DEBEN tener un objeto diferente. Si usas 'Leftovers' en uno, no puedes usarlo en otro."
@@ -199,7 +227,7 @@ export async function POST(request: Request) {
         },
         "selected_ids": [123, 456],
         "builds": {
-          "123": { "item": "...", "ability": "...", "nature": "...", "evs": "...", "ivs": "...", "moves": ["...", "...", "...", "..."] }
+          "123": { "item": "...", "ability": "...", "nature": "...", "evs": "...", "ivs": "...", "moves": ["...", "...", "...", "..."], "teraType": "..." }
         }
       }
     `;

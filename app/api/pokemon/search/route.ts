@@ -1,8 +1,13 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma'; // Asegúrate de tener el Singleton configurado
+import prisma from '@/lib/prisma';
+import { requireAuth } from '@/lib/supabase/apiAuth';
 
 export async function GET(request: Request) {
   try {
+    // Auth protection
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { searchParams } = new URL(request.url);
     const name = searchParams.get('name');
 

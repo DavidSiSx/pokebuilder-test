@@ -23,3 +23,9 @@ export const NATURES: Record<string, string> = {
   Quiet: "+SpA, -Spe", Rash: "+SpA, -SpD", Relaxed: "+Def, -Spe", Sassy: "+SpD, -Spe", Timid: "+Spe, -Atk",
   Hardy: "Neutral", Docile: "Neutral", Serious: "Neutral", Bashful: "Neutral", Quirky: "Neutral"
 };
+
+export const TERA_TYPES = [
+  'Normal', 'Fire', 'Water', 'Grass', 'Electric', 'Ice',
+  'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug',
+  'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Stellar'
+];
