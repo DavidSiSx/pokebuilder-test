@@ -1,11 +1,13 @@
 'use client';
-import React, { useState } from 'react';
-import TeamReviewCard from '@/components/TeamReviewCard';
+import React, { useState, useCallback } from 'react';
+import TeamReviewCard, { type ReviewPokemon } from '@/components/TeamReviewCard';
 import ReviewResult from '@/components/ReviewResult';
 import { PokeballIcon, PokeballBgPattern } from '@/components/PokeballIcon';
 import Link from 'next/link';
 
-const EMPTY_POKEMON = () => ({
+// _id es requerido por TeamReviewCard para keys estables (evita re-mount al actualizar estado)
+const createEmpty = (id: number): ReviewPokemon => ({
+  _id: id,
   name: '',
   item: '',
   ability: '',
@@ -24,7 +26,9 @@ const FORMATOS = [
 ];
 
 export default function ReviewPage() {
-  const [team, setTeam] = useState(Array.from({ length: 6 }, () => EMPTY_POKEMON()));
+  const [team, setTeam] = useState<ReviewPokemon[]>(() =>
+    Array.from({ length: 6 }, (_, i) => createEmpty(i))
+  );
   const [format, setFormat] = useState('National Dex Doubles (6v6 - Cobblemon)');
   const [mechanics, setMechanics] = useState({
     enableMega: false,
@@ -37,17 +41,22 @@ export default function ReviewPage() {
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const updatePokemon = (index: number, pokemon: any) => {
-    const newTeam = [...team];
-    newTeam[index] = pokemon;
-    setTeam(newTeam);
-  };
+  // useCallback sin deps externas → usa setter funcional → no se recrea en cada render
+  const updatePokemon = useCallback((index: number, pokemon: ReviewPokemon) => {
+    setTeam(prev => {
+      const next = [...prev];
+      next[index] = pokemon;
+      return next;
+    });
+  }, []);
 
-  const removePokemon = (index: number) => {
-    const newTeam = [...team];
-    newTeam[index] = EMPTY_POKEMON();
-    setTeam(newTeam);
-  };
+  const removePokemon = useCallback((index: number) => {
+    setTeam(prev => {
+      const next = [...prev];
+      next[index] = createEmpty(prev[index]._id); // preserva el mismo _id
+      return next;
+    });
+  }, []);
 
   const filledSlots = team.filter(p => p.name).length;
 
@@ -128,63 +137,30 @@ export default function ReviewPage() {
                 <div>
                   <label className="text-[8px] font-black text-muted-foreground uppercase tracking-wider mb-1.5 block">Mecanicas Activas</label>
                   <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setMechanics(prev => ({ ...prev, enableTera: !prev.enableTera }))}
-                      className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all border ${
-                        mechanics.enableTera
-                          ? 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400'
-                          : 'bg-secondary/30 border-border text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      Tera
-                    </button>
-                    <button
-                      onClick={() => setMechanics(prev => ({ ...prev, enableMega: !prev.enableMega }))}
-                      className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all border ${
-                        mechanics.enableMega
-                          ? 'bg-violet-500/15 border-violet-500/30 text-violet-400'
-                          : 'bg-secondary/30 border-border text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      Mega
-                    </button>
-                    <button
-                      onClick={() => setMechanics(prev => ({ ...prev, enableGmax: !prev.enableGmax }))}
-                      className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all border ${
-                        mechanics.enableGmax
-                          ? 'bg-rose-500/15 border-rose-500/30 text-rose-400'
-                          : 'bg-secondary/30 border-border text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      Gmax
-                    </button>
-                    <button
-                      onClick={() => setMechanics(prev => ({ ...prev, enableDynamax: !prev.enableDynamax }))}
-                      className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all border ${
-                        mechanics.enableDynamax
-                          ? 'bg-rose-500/15 border-rose-500/30 text-rose-400'
-                          : 'bg-secondary/30 border-border text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      Dmax
-                    </button>
-                    <button
-                      onClick={() => setMechanics(prev => ({ ...prev, enableZMoves: !prev.enableZMoves }))}
-                      className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all border ${
-                        mechanics.enableZMoves
-                          ? 'bg-amber-500/15 border-amber-500/30 text-amber-400'
-                          : 'bg-secondary/30 border-border text-muted-foreground hover:text-foreground'
-                      }`}
-                    >
-                      Z-Move
-                    </button>
+                    {([
+                      { key: 'enableTera',    label: 'Tera',   on: 'bg-cyan-500/15 border-cyan-500/30 text-cyan-400' },
+                      { key: 'enableMega',    label: 'Mega',   on: 'bg-violet-500/15 border-violet-500/30 text-violet-400' },
+                      { key: 'enableGmax',    label: 'Gmax',   on: 'bg-rose-500/15 border-rose-500/30 text-rose-400' },
+                      { key: 'enableDynamax', label: 'Dmax',   on: 'bg-rose-500/15 border-rose-500/30 text-rose-400' },
+                      { key: 'enableZMoves',  label: 'Z-Move', on: 'bg-amber-500/15 border-amber-500/30 text-amber-400' },
+                    ] as const).map(({ key, label, on }) => (
+                      <button
+                        key={key}
+                        onClick={() => setMechanics(prev => ({ ...prev, [key]: !prev[key] }))}
+                        className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition-all border ${
+                          mechanics[key] ? on : 'bg-secondary/30 border-border text-muted-foreground hover:text-foreground'
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Team Input Grid */}
+          {/* Team Grid */}
           <div>
             <h2 className="text-[9px] font-black text-pokeball-red uppercase tracking-widest mb-4 flex items-center gap-2">
               <PokeballIcon size={14} />
@@ -193,9 +169,9 @@ export default function ReviewPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {team.map((pokemon, i) => (
                 <TeamReviewCard
-                  key={i}
+                  key={pokemon._id}                              // ← key estable, no el index
                   index={i}
-                  pokemon={pokemon}
+                  pokemon={pokemon}                              // ← ReviewPokemon con _id ✓
                   onChange={(p) => updatePokemon(i, p)}
                   onRemove={() => removePokemon(i)}
                   mechanics={mechanics}
@@ -204,7 +180,7 @@ export default function ReviewPage() {
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <div className="flex flex-col items-center gap-4">
             <button
               onClick={handleSubmit}
@@ -212,15 +188,9 @@ export default function ReviewPage() {
               className="px-10 py-4 bg-pokeball-red hover:bg-pokeball-dark disabled:bg-secondary disabled:text-muted-foreground text-primary-foreground text-[11px] font-black uppercase tracking-[0.15em] rounded-xl transition-all shadow-[0_4px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_4px_30px_rgba(220,38,38,0.5)] disabled:shadow-none border border-pokeball-red/50 disabled:border-border flex items-center gap-3"
             >
               {isLoading ? (
-                <>
-                  <PokeballIcon size={16} className="animate-spin" />
-                  <span>Evaluando Equipo...</span>
-                </>
+                <><PokeballIcon size={16} className="animate-spin" /><span>Evaluando Equipo...</span></>
               ) : (
-                <>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
-                  <span>Evaluar Equipo ({filledSlots} Pokemon)</span>
-                </>
+                <><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg><span>Evaluar Equipo ({filledSlots} Pokemon)</span></>
               )}
             </button>
             {filledSlots === 0 && (
@@ -238,7 +208,7 @@ export default function ReviewPage() {
             </div>
           )}
 
-          {/* Review Result */}
+          {/* Result */}
           {result && (
             <div className="bg-card border-2 border-pokeball-red/30 rounded-2xl p-6 lg:p-8 shadow-xl relative overflow-hidden">
               <PokeballBgPattern />
@@ -252,6 +222,7 @@ export default function ReviewPage() {
               </div>
             </div>
           )}
+
         </div>
       </main>
     </div>
