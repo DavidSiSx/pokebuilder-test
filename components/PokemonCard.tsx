@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { NATURES, TYPE_COLORS, TYPE_TRANSLATIONS } from '@/utils/pokemonConstants';
 
 function PokeballSlotIcon({ className = "" }: { className?: string }) {
@@ -20,40 +21,175 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
   const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
+  useEffect(() => { setMounted(true); }, []);
   useEffect(() => { setPokemon(data); setIsModalOpen(false); }, [data]);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [isModalOpen]);
 
   const handleSearch = async (val: string) => {
     setSearchTerm(val);
     if (val.length > 2) {
-      const res = await fetch(`/api/pokemon/search?name=${val.toLowerCase()}`);
-      setResults(await res.json());
+      try {
+        const res = await fetch(`/api/pokemon/search?name=${val.toLowerCase()}`);
+        const data = await res.json();
+        setResults(data);
+      } catch (error) {
+        console.error("Error searching:", error);
+      }
+    } else {
+      setResults([]);
     }
   };
 
   const natureInfo = pokemon?.suggestedBuild?.nature
-    ? `${pokemon.suggestedBuild.nature} (${NATURES[pokemon.suggestedBuild.nature] || 'Neutral'})` : "---";
+    ? `${pokemon.suggestedBuild.nature} (${NATURES[pokemon.suggestedBuild.nature as keyof typeof NATURES] || 'Neutral'})` : "---";
 
   const activeTipos = pokemon?.tipos || [pokemon?.tipo1, pokemon?.tipo2].filter(Boolean);
-
   const isLeader = slotNumber === 1;
 
+  const geneticsModal = pokemon && (
+    <div
+      className="fixed inset-0 flex items-center justify-center p-6 bg-background/80 backdrop-blur-md animate-in fade-in duration-200"
+      style={{ zIndex: 99999 }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Detalles geneticos de ${pokemon.nombre}`}
+      onClick={() => setIsModalOpen(false)}
+    >
+      <div
+        className="bg-card border-2 border-pokeball-red/40 rounded-2xl p-8 max-w-md w-full relative shadow-[0_0_60px_rgba(220,38,38,0.15)] overflow-hidden animate-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-pokeball-red/60 to-transparent" />
+
+        <button
+          onClick={() => setIsModalOpen(false)}
+          className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center bg-secondary hover:bg-destructive hover:text-destructive-foreground rounded-full text-muted-foreground transition-colors font-bold text-xs"
+          aria-label="Cerrar"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6 6 18"/><path d="m6 6 12 12"/>
+          </svg>
+        </button>
+
+        <div className="flex items-center gap-4 border-b border-border pb-4 mb-6">
+          <div className="w-16 h-16 rounded-xl bg-secondary/30 border border-border p-1.5 flex items-center justify-center">
+            <img
+              src={pokemon.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+              alt={pokemon.nombre}
+              className="w-full h-full object-contain drop-shadow-lg"
+            />
+          </div>
+          <div>
+            <h3 className="text-2xl font-black uppercase text-pokeball-red italic leading-none">{pokemon.nombre.replace('-', ' ')}</h3>
+            <div className="flex gap-1.5 mt-2">
+              {activeTipos.map((t: string) => (
+                <span key={t} className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${TYPE_COLORS[t.toLowerCase()] || 'bg-secondary text-foreground'}`}>
+                  {TYPE_TRANSLATIONS[t.toLowerCase()] || t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {/* Naturaleza */}
+          <div>
+            <label className="text-[9px] font-black text-emerald-500 dark:text-emerald-400 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400" />
+              Naturaleza Recomendada
+            </label>
+            <div className="text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 px-4 py-3 rounded-xl border border-emerald-500/20">
+              {natureInfo}
+            </div>
+          </div>
+
+          {/* EVs */}
+          <div>
+            <label className="text-[9px] font-black text-amber-500 dark:text-amber-400 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+              <span className="w-2 h-2 rounded-full bg-amber-500 dark:bg-amber-400" />
+              Distribucion de EVs
+            </label>
+            <div className="text-xs font-bold text-amber-700 dark:text-amber-300 bg-amber-500/10 px-4 py-3 rounded-xl border border-amber-500/20">
+              {pokemon.suggestedBuild?.evs || "---"}
+            </div>
+          </div>
+
+          {/* IVs */}
+          <div>
+            <label className="text-[9px] font-black text-sky-500 dark:text-sky-400 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+              <span className="w-2 h-2 rounded-full bg-sky-500 dark:bg-sky-400" />
+              Esquema de IVs (Genes)
+            </label>
+            <div className="text-[10px] font-bold text-sky-700 dark:text-sky-300 bg-sky-500/10 px-4 py-4 rounded-xl border border-sky-500/20 tracking-wide leading-relaxed">
+              {pokemon.suggestedBuild?.ivs || "31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe"}
+            </div>
+          </div>
+
+          {/* Tera Type */}
+          {pokemon.suggestedBuild?.teraType && (
+            <div>
+              <label className="text-[9px] font-black text-cyan-500 dark:text-cyan-400 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400" />
+                Tera Type
+              </label>
+              <div className="text-xs font-bold text-cyan-700 dark:text-cyan-300 bg-cyan-500/10 px-4 py-3 rounded-xl border border-cyan-500/20 flex items-center gap-2">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-500 dark:text-cyan-400">
+                  <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+                </svg>
+                {TYPE_TRANSLATIONS[pokemon.suggestedBuild.teraType.toLowerCase()] || pokemon.suggestedBuild.teraType}
+              </div>
+            </div>
+          )}
+
+          {/* Moves sugeridos si existen */}
+          {pokemon.suggestedBuild?.moves?.length > 0 && (
+            <div>
+              <label className="text-[9px] font-black text-violet-500 dark:text-violet-400 uppercase tracking-widest flex items-center gap-1.5 mb-1.5">
+                <span className="w-2 h-2 rounded-full bg-violet-500 dark:bg-violet-400" />
+                Movimientos Sugeridos
+              </label>
+              <div className="grid grid-cols-2 gap-1.5">
+                {pokemon.suggestedBuild.moves.map((m: string, i: number) => (
+                  <div key={i} className="text-[10px] font-bold text-violet-700 dark:text-violet-300 bg-violet-500/10 px-3 py-2 rounded-lg border border-violet-500/20 flex items-center gap-2">
+                    <span className="w-3.5 h-3.5 rounded-full bg-violet-500/20 flex items-center justify-center text-[7px] text-violet-500 dark:text-violet-400 font-black flex-shrink-0">{i + 1}</span>
+                    <span className="truncate">{m}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="relative min-h-[580px] group flex flex-col">
+    <div className="relative min-h-[580px] group flex flex-col z-10 hover:z-20">
       <div className={`
-        flex-1 relative overflow-hidden
+        flex-1 relative 
         bg-card border-2
         ${isLocked
           ? 'border-pokeball-red shadow-[0_0_25px_rgba(220,38,38,0.25)]'
           : 'border-border hover:border-pokeball-red/40'}
         rounded-2xl flex flex-col transition-all duration-300
       `}>
-        {/* Card top accent - Pokeball inspired red/white split */}
+        {/* Card top accent */}
         <div className="absolute top-0 left-0 right-0 h-1.5 overflow-hidden rounded-t-2xl">
           <div className={`h-full ${isLocked ? 'bg-pokeball-red' : 'bg-gradient-to-r from-pokeball-red/60 via-pokeball-red/30 to-transparent'}`} />
         </div>
 
-        {/* Pokeball watermark in background */}
+        {/* Pokeball watermark */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.04] pointer-events-none">
           <PokeballSlotIcon className="text-foreground w-48 h-48" />
         </div>
@@ -68,7 +204,9 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
                 : 'bg-secondary text-secondary-foreground'}
             `}>
               {isLeader ? (
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
               ) : (
                 <span>{slotNumber}</span>
               )}
@@ -112,7 +250,7 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
         <div className="pokeball-divider mx-5 my-1" />
 
         {!pokemon ? (
-          /* EMPTY STATE - Search */
+          /* EMPTY STATE */
           <div className="flex-1 flex flex-col justify-center gap-4 px-5 pb-5 relative z-10">
             <div className="flex flex-col items-center gap-3 py-6">
               <div className="w-16 h-16 rounded-full bg-secondary/50 flex items-center justify-center border border-border">
@@ -125,57 +263,69 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
               </p>
             </div>
 
-            <div className="relative">
+            <div className="relative w-full">
               <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+                </svg>
               </div>
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="Nombre o tipo..."
+                placeholder="Nombre o forma (Ej: Ninetales-Alola)..."
                 className="w-full bg-secondary/50 border border-border rounded-xl pl-10 pr-4 py-3.5 text-xs font-bold text-foreground outline-none focus:ring-2 focus:ring-pokeball-red/50 focus:border-pokeball-red/50 placeholder:text-muted-foreground/60 transition-all"
               />
-            </div>
 
-            {results.length > 0 && (
-              <div className="bg-card border border-border rounded-xl overflow-hidden shadow-2xl max-h-48 overflow-y-auto no-scrollbar">
-                {results.map((p: any) => (
-                  <button
-                    key={p.id}
-                    onClick={() => { setPokemon(p); onSelect(p); setSearchTerm(''); setResults([]); }}
-                    className="w-full p-3.5 text-left hover:bg-pokeball-red/10 flex items-center justify-between border-b border-border last:border-b-0 transition-colors group/item"
-                  >
-                    <span className="text-[11px] font-black uppercase text-foreground group-hover/item:text-pokeball-red transition-colors">{p.nombre}</span>
-                    <div className="flex gap-1.5">
-                      {[p.tipo1, p.tipo2].filter(Boolean).map((t: string) => (
-                        <span key={t} className={`px-2 py-0.5 rounded text-[7px] font-black uppercase ${TYPE_COLORS[t.toLowerCase()] || 'bg-secondary text-foreground'}`}>
-                          {TYPE_TRANSLATIONS[t.toLowerCase()] || t}
-                        </span>
-                      ))}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+              {results.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-2 bg-card border-2 border-border rounded-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] max-h-56 overflow-y-auto custom-scrollbar z-[60]">
+                  {results.map((p: any) => (
+                    <button
+                      key={p.id}
+                      onClick={() => { setPokemon(p); onSelect(p); setSearchTerm(''); setResults([]); }}
+                      className="w-full p-3 text-left hover:bg-pokeball-red/15 flex items-center justify-between border-b border-border/50 last:border-b-0 transition-colors group/item"
+                    >
+                      <span className="text-[11px] font-black uppercase text-foreground group-hover/item:text-pokeball-red transition-colors truncate pr-2">
+                        {p.nombre.replace('-', ' ')}
+                      </span>
+                      <div className="flex gap-1.5 shrink-0">
+                        {[p.tipo1, p.tipo2].filter(Boolean).map((t: string) => (
+                          <span key={t} className={`px-1.5 py-0.5 rounded text-[7px] font-black uppercase shadow-sm ${TYPE_COLORS[t.toLowerCase()] || 'bg-secondary text-foreground'}`}>
+                            {TYPE_TRANSLATIONS[t.toLowerCase()] || t}
+                          </span>
+                        ))}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         ) : (
-          /* FILLED STATE - Pokemon Data */
+          /* FILLED STATE */
           <div className="flex-1 flex flex-col px-5 pb-5 relative z-10">
             {/* Pokemon Header */}
             <div className="flex items-center gap-4 my-4">
               <div className="relative">
-                <div className={`w-20 h-20 rounded-xl p-1.5 border-2 ${isLocked ? 'border-pokeball-red/40 bg-pokeball-red/5' : 'border-border bg-secondary/30'} transition-all`}>
-                  <img src={pokemon.sprite_url} alt={pokemon.nombre} className="w-full h-full object-contain drop-shadow-lg" />
+                <div className={`w-20 h-20 rounded-xl p-1.5 border-2 ${isLocked ? 'border-pokeball-red/40 bg-pokeball-red/5' : 'border-border bg-secondary/30'} transition-all flex items-center justify-center`}>
+                  <img
+                    src={pokemon.sprite_url || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`}
+                    alt={pokemon.nombre}
+                    className="w-full h-full object-contain drop-shadow-lg"
+                  />
                 </div>
                 {isLocked && (
                   <div className="absolute -top-1 -right-1 w-4 h-4 bg-pokeball-red rounded-full flex items-center justify-center sparkle">
-                    <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" className="text-primary-foreground"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" className="text-primary-foreground">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                    </svg>
                   </div>
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg font-black uppercase italic text-foreground leading-tight truncate">{pokemon.nombre}</h3>
+                <h3 className="text-lg font-black uppercase italic text-foreground leading-tight truncate">
+                  {pokemon.nombre.replace('-', ' ')}
+                </h3>
                 <div className="flex gap-1.5 mt-2 flex-wrap">
                   {activeTipos.map((t: string) => (
                     <span key={t} className={`px-2.5 py-1 rounded-lg text-[8px] font-black uppercase ${TYPE_COLORS[t.toLowerCase()] || 'bg-secondary text-foreground'}`}>
@@ -183,7 +333,7 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
                     </span>
                   ))}
                   {pokemon.suggestedBuild?.teraType && (
-                    <span className="px-2.5 py-1 rounded-lg text-[8px] font-black uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                    <span className="px-2.5 py-1 rounded-lg text-[8px] font-black uppercase bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
                       <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
                       Tera: {TYPE_TRANSLATIONS[pokemon.suggestedBuild.teraType.toLowerCase()] || pokemon.suggestedBuild.teraType}
                     </span>
@@ -199,14 +349,18 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-amber-400"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4"/><path d="M12 16V8"/></svg>
                   Objeto
                 </label>
-                <div className="bg-secondary/40 border border-border px-3 py-2 rounded-lg text-[10px] font-bold text-foreground/80 truncate">{pokemon.suggestedBuild?.item || "---"}</div>
+                <div className="bg-secondary/40 border border-border px-3 py-2 rounded-lg text-[10px] font-bold text-foreground/80 truncate" title={pokemon.suggestedBuild?.item}>
+                  {pokemon.suggestedBuild?.item || "---"}
+                </div>
               </div>
               <div className="space-y-1">
                 <label className="text-[8px] font-black text-muted-foreground uppercase tracking-wider flex items-center gap-1">
                   <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-pokeball-red"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
                   Habilidad
                 </label>
-                <div className="bg-pokeball-red/5 border border-pokeball-red/20 px-3 py-2 rounded-lg text-[10px] font-bold text-pokeball-red truncate">{pokemon.suggestedBuild?.ability || "---"}</div>
+                <div className="bg-pokeball-red/5 border border-pokeball-red/20 px-3 py-2 rounded-lg text-[10px] font-bold text-pokeball-red truncate" title={pokemon.suggestedBuild?.ability}>
+                  {pokemon.suggestedBuild?.ability || "---"}
+                </div>
               </div>
             </div>
 
@@ -249,69 +403,8 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
         )}
       </div>
 
-      {/* Genetics Modal */}
-      {isModalOpen && pokemon && (
-        <div className="fixed inset-0 z-[9998] flex items-center justify-center p-6 bg-background/80 backdrop-blur-md" style={{ isolation: 'isolate' }} role="dialog" aria-modal="true" aria-label={`Detalles geneticos de ${pokemon.nombre}`} onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
-          <div className="bg-card border-2 border-pokeball-red/40 rounded-2xl p-8 max-w-md w-full relative shadow-[0_0_60px_rgba(220,38,38,0.15)] overflow-hidden">
-            {/* Top accent */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-pokeball-red/60 to-transparent" />
-
-            <button onClick={() => setIsModalOpen(false)} className="absolute top-5 right-5 w-8 h-8 flex items-center justify-center bg-secondary hover:bg-destructive hover:text-destructive-foreground rounded-full text-muted-foreground transition-colors font-bold text-xs" aria-label="Cerrar">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </button>
-
-            <div className="flex items-center gap-4 border-b border-border pb-4 mb-6">
-              <div className="w-16 h-16 rounded-xl bg-secondary/30 border border-border p-1.5">
-                <img src={pokemon.sprite_url} alt={pokemon.nombre} className="w-full h-full object-contain drop-shadow-lg" />
-              </div>
-              <div>
-                <h3 className="text-2xl font-black uppercase text-pokeball-red italic leading-none">{pokemon.nombre}</h3>
-                <div className="flex gap-1.5 mt-2">
-                  {activeTipos.map((t: string) => (
-                    <span key={t} className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${TYPE_COLORS[t.toLowerCase()] || 'bg-secondary text-foreground'}`}>{TYPE_TRANSLATIONS[t.toLowerCase()] || t}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              <div>
-                <label className="text-[9px] font-black text-emerald-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  Naturaleza Recomendada
-                </label>
-                <div className="mt-1.5 text-xs font-bold text-emerald-100 bg-emerald-500/10 px-4 py-3 rounded-xl border border-emerald-500/20">{natureInfo}</div>
-              </div>
-              <div>
-                <label className="text-[9px] font-black text-amber-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-amber-400" />
-                  Distribucion de EVs
-                </label>
-                <div className="mt-1.5 text-xs font-bold text-amber-100 bg-amber-500/10 px-4 py-3 rounded-xl border border-amber-500/20">{pokemon.suggestedBuild?.evs || "---"}</div>
-              </div>
-              <div>
-                <label className="text-[9px] font-black text-sky-400 uppercase tracking-widest flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-sky-400" />
-                  Esquema de IVs (Genes)
-                </label>
-                <div className="mt-1.5 text-[10px] font-bold text-sky-100 bg-sky-500/10 px-4 py-4 rounded-xl border border-sky-500/20 tracking-wide">{pokemon.suggestedBuild?.ivs || "31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe"}</div>
-              </div>
-              {pokemon.suggestedBuild?.teraType && (
-                <div>
-                  <label className="text-[9px] font-black text-cyan-400 uppercase tracking-widest flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400" />
-                    Tera Type
-                  </label>
-                  <div className="mt-1.5 text-xs font-bold text-cyan-100 bg-cyan-500/10 px-4 py-3 rounded-xl border border-cyan-500/20 flex items-center gap-2">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-400"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
-                    {TYPE_TRANSLATIONS[pokemon.suggestedBuild.teraType.toLowerCase()] || pokemon.suggestedBuild.teraType}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Portal: escapa todos los stacking contexts */}
+      {isModalOpen && mounted && createPortal(geneticsModal, document.body)}
     </div>
   );
 }
