@@ -1,9 +1,6 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -86,37 +83,37 @@ export default function SignUpPage() {
               <form onSubmit={handleSignUp}>
                 <div className="flex flex-col gap-5">
                   <div className="grid gap-2">
-                    <Label htmlFor="email" className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Email</Label>
-                    <Input
+                    <label htmlFor="email" className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Email</label>
+                    <input
                       id="email"
                       type="email"
                       placeholder="trainer@pokelab.gg"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="bg-secondary/50 border-border rounded-xl text-sm font-bold focus:ring-pokeball-red/40 focus:border-pokeball-red/40"
+                      className="flex h-10 w-full rounded-xl border border-border bg-secondary/50 px-3 py-2 text-sm font-bold text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-pokeball-red/40 focus:border-pokeball-red/40"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="password" className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Password</Label>
-                    <Input
+                    <label htmlFor="password" className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Password</label>
+                    <input
                       id="password"
                       type="password"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="bg-secondary/50 border-border rounded-xl text-sm font-bold focus:ring-pokeball-red/40 focus:border-pokeball-red/40"
+                      className="flex h-10 w-full rounded-xl border border-border bg-secondary/50 px-3 py-2 text-sm font-bold text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-pokeball-red/40 focus:border-pokeball-red/40"
                     />
                   </div>
                   <div className="grid gap-2">
-                    <Label htmlFor="repeat-password" className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Confirmar Password</Label>
-                    <Input
+                    <label htmlFor="repeat-password" className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Confirmar Password</label>
+                    <input
                       id="repeat-password"
                       type="password"
                       required
                       value={repeatPassword}
                       onChange={(e) => setRepeatPassword(e.target.value)}
-                      className="bg-secondary/50 border-border rounded-xl text-sm font-bold focus:ring-pokeball-red/40 focus:border-pokeball-red/40"
+                      className="flex h-10 w-full rounded-xl border border-border bg-secondary/50 px-3 py-2 text-sm font-bold text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-pokeball-red/40 focus:border-pokeball-red/40"
                     />
                   </div>
                   {error && (
@@ -124,13 +121,13 @@ export default function SignUpPage() {
                       {error}
                     </div>
                   )}
-                  <Button
+                  <button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-5 bg-pokeball-red hover:bg-pokeball-dark text-primary-foreground text-[11px] font-black uppercase tracking-[0.15em] rounded-xl transition-all shadow-[0_4px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_4px_30px_rgba(220,38,38,0.5)] disabled:opacity-50 border border-pokeball-red/50"
+                    className="w-full py-3 bg-pokeball-red hover:bg-pokeball-dark text-primary-foreground text-[11px] font-black uppercase tracking-[0.15em] rounded-xl transition-all shadow-[0_4px_20px_rgba(220,38,38,0.3)] hover:shadow-[0_4px_30px_rgba(220,38,38,0.5)] disabled:opacity-50 border border-pokeball-red/50 cursor-pointer"
                   >
                     {isLoading ? 'Creando cuenta...' : 'Registrar'}
-                  </Button>
+                  </button>
                 </div>
                 <div className="mt-6 text-center text-xs font-bold text-muted-foreground">
                   {'Ya tienes cuenta? '}
