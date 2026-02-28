@@ -1,27 +1,14 @@
 'use client';
 import React, { useState, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import TeamReviewCard from '@/components/TeamReviewCard';
+import TeamReviewCard, { type ReviewPokemon } from '@/components/TeamReviewCard';
 import ReviewResult from '@/components/ReviewResult';
 import { PokeballIcon, PokeballBgPattern } from '@/components/PokeballIcon';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-
-// ─────────────────────────────────────────────
-// Tipos
-// ─────────────────────────────────────────────
-interface ReviewPokemon {
-  _id: number;          // ID estable para key — NUNCA cambia
-  name: string;
-  item: string;
-  ability: string;
-  nature: string;
-  teraType: string;
-  moves: string[];
-  evs: string;
-  mechanic: string;
-}
+// ↑ ReviewPokemon se importa desde TeamReviewCard — ya incluye _id
+// NO redefinir aquí para evitar conflicto de tipos en producción (tsc --strict)
 
 const createEmpty = (id: number): ReviewPokemon => ({
   _id: id,
