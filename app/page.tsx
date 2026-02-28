@@ -210,8 +210,10 @@ export default function Home() {
       </aside>
 
       {/* MAIN CONTENT */}
-      <main className="flex-1 overflow-y-auto custom-scrollbar relative">
-        <PokeballBgPattern />
+      <main className="flex-1 overflow-y-auto custom-scrollbar relative" style={{ isolation: 'isolate' }}>
+        <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+          <PokeballBgPattern />
+        </div>
 
         {/* Top bar for mobile toggle */}
         {!sidebarOpen && (
@@ -295,9 +297,11 @@ export default function Home() {
             </section>
 
             {/* TEAM ANALYSIS */}
-            <section className="bg-card rounded-2xl p-8 lg:p-10 border-2 border-border shadow-xl relative overflow-hidden">
-              <PokeballBgPattern />
-              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-pokeball-red/40 to-transparent" />
+            <section className="bg-card rounded-2xl p-6 lg:p-8 border-2 border-border shadow-xl relative overflow-visible" style={{ isolation: 'isolate' }}>
+              <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                <PokeballBgPattern />
+              </div>
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-pokeball-red/40 to-transparent rounded-t-2xl" />
               <div className="relative z-10">
                 <TeamAnalysis analysis={analysis as any} />
               </div>
@@ -305,9 +309,11 @@ export default function Home() {
 
             {/* AI TACTICAL REPORT */}
             {aiReport && (
-              <div className="bg-card border-2 border-pokeball-red/30 rounded-2xl p-8 lg:p-10 shadow-xl space-y-8 animate-in fade-in slide-in-from-bottom-8 relative overflow-hidden">
-                <PokeballBgPattern />
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-amber-500 to-emerald-500 opacity-60" />
+              <div className="bg-card border-2 border-pokeball-red/30 rounded-2xl p-6 lg:p-8 shadow-xl space-y-8 animate-in fade-in slide-in-from-bottom-8 relative" style={{ isolation: 'isolate' }}>
+                <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none">
+                  <PokeballBgPattern />
+                </div>
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-amber-500 to-emerald-500 opacity-60 rounded-t-2xl" />
                 
                 <div className="relative z-10 space-y-8">
                   <h2 className="text-[11px] font-black text-pokeball-red uppercase tracking-[0.25em] flex items-center gap-3">

@@ -68,10 +68,10 @@ export default function TeamAnalysis({ analysis }: { analysis: DetailedTypeAnaly
         </button>
       </div>
 
-      {/* Full Matrix Modal */}
+      {/* Full Matrix Modal - rendered via portal-like fixed overlay */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-8 bg-background/90 backdrop-blur-md animate-in fade-in" role="dialog" aria-modal="true" aria-label="Matriz de Debilidades">
-          <div className="bg-card border-2 border-pokeball-red/30 rounded-2xl p-8 max-w-6xl w-full max-h-[85vh] overflow-y-auto custom-scrollbar shadow-[0_0_80px_rgba(220,38,38,0.1)] relative">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 md:p-8 bg-background/90 backdrop-blur-md" style={{ isolation: 'isolate' }} role="dialog" aria-modal="true" aria-label="Matriz de Debilidades" onClick={(e) => { if (e.target === e.currentTarget) setIsModalOpen(false); }}>
+          <div className="bg-card border-2 border-pokeball-red/30 rounded-2xl p-6 md:p-8 max-w-6xl w-full max-h-[85vh] overflow-y-auto custom-scrollbar shadow-[0_0_80px_rgba(220,38,38,0.1)] relative" onClick={(e) => e.stopPropagation()}>
             {/* Top accent */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pokeball-red via-pokeball-red/60 to-transparent rounded-t-2xl" />
 
