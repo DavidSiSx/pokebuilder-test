@@ -296,6 +296,7 @@ export async function POST(request: Request) {
       5. PRE-EVOLUCIONES: Si no es Little Cup, evítalas salvo que tengan Eviolite.
       6. FORMATO: En "selected_ids" y "builds", responde usando ÚNICAMENTE los [ID] numéricos.
       7. REDACCIÓN: Usa doble salto de línea (\\n\\n) para separar párrafos en tu reporte. NUNCA menciones los IDs numéricos en el texto.
+      8. USA LOS POKEMONS META PRIMERO: Prioriza Pokémon con análisis de meta fuertes y sinergias claras con el líder y entre sí. Evita picks "creativos" sin fundamento competitivo sólido solo para cumplir la cuota de 6.
       
       SELECCIONA EXACTAMENTE ${slotsToFill} IDs y GENERA BUILDS PARA LOS 6 POKÉMON.
 
