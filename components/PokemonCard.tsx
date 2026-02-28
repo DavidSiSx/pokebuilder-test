@@ -182,6 +182,12 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
                       {TYPE_TRANSLATIONS[t.toLowerCase()] || t}
                     </span>
                   ))}
+                  {pokemon.suggestedBuild?.teraType && (
+                    <span className="px-2.5 py-1 rounded-lg text-[8px] font-black uppercase bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 flex items-center gap-1">
+                      <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+                      Tera: {TYPE_TRANSLATIONS[pokemon.suggestedBuild.teraType.toLowerCase()] || pokemon.suggestedBuild.teraType}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -290,6 +296,18 @@ export default function PokemonCard({ slotNumber, data, isLocked, onToggleLock, 
                 </label>
                 <div className="mt-1.5 text-[10px] font-bold text-sky-100 bg-sky-500/10 px-4 py-4 rounded-xl border border-sky-500/20 tracking-wide">{pokemon.suggestedBuild?.ivs || "31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe"}</div>
               </div>
+              {pokemon.suggestedBuild?.teraType && (
+                <div>
+                  <label className="text-[9px] font-black text-cyan-400 uppercase tracking-widest flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-cyan-400" />
+                    Tera Type
+                  </label>
+                  <div className="mt-1.5 text-xs font-bold text-cyan-100 bg-cyan-500/10 px-4 py-3 rounded-xl border border-cyan-500/20 flex items-center gap-2">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-400"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+                    {TYPE_TRANSLATIONS[pokemon.suggestedBuild.teraType.toLowerCase()] || pokemon.suggestedBuild.teraType}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

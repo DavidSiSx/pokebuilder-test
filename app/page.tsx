@@ -5,6 +5,9 @@ import TeamAnalysis from '@/components/TeamAnalysis';
 import SidebarFilters from '@/components/SidebarFilters';
 import { PokeballIcon, PokeballBgPattern } from '@/components/PokeballIcon';
 import { analyzeTeamDetailed, TeamMember, DetailedTypeAnalysis } from '@/utils/teamAnalysis';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [team, setTeam] = useState<(TeamMember | null)[]>(Array(6).fill(null));
@@ -15,6 +18,16 @@ export default function Home() {
   const [errorModal, setErrorModal] = useState<string | null>(null);
   const [isDynamicMode, setIsDynamicMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/auth/login');
+    router.refresh();
+  };
   
   const [config, setConfig] = useState({
     format: 'National Dex Doubles (6v6 - Cobblemon)',
@@ -34,6 +47,18 @@ export default function Home() {
     preferTrickRoom: false,
     preferTailwind: false,
     teamArchetype: '',
+    // Mechanics
+    enableMega: false,
+    enableGmax: false,
+    enableTera: true,
+    preferredTeraType: '',
+    enableZMoves: false,
+    enableDynamax: false,
+    // Regional forms
+    includeAlola: true,
+    includeGalar: true,
+    includeHisui: true,
+    includePaldea: true,
   });
 
   useEffect(() => {
@@ -178,6 +203,27 @@ export default function Home() {
         {/* Pokeball divider under header */}
         {sidebarOpen && <div className="pokeball-divider mx-6 mb-4" />}
 
+        {/* Navigation links */}
+        {sidebarOpen && (
+          <div className="px-6 mb-4 flex gap-2 relative z-10">
+            <Link
+              href="/review"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-secondary/50 border border-border rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:text-foreground hover:bg-secondary hover:border-pokeball-red/20 transition-all"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+              Reviewer
+            </Link>
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="flex items-center justify-center gap-1.5 px-3 py-2.5 bg-secondary/50 border border-border rounded-xl text-[9px] font-black uppercase tracking-widest text-muted-foreground hover:text-pokeball-red hover:bg-pokeball-red/10 hover:border-pokeball-red/20 transition-all disabled:opacity-50"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+              {isLoggingOut ? '...' : 'Salir'}
+            </button>
+          </div>
+        )}
+
         {/* Sidebar Content */}
         {sidebarOpen && (
           <div className="flex-1 overflow-hidden flex flex-col px-6 relative z-10">
@@ -247,8 +293,38 @@ export default function Home() {
             )}
 
             {/* ACTIVE FILTERS TAGS */}
-            {(config.isMonotype || config.preferredWeather !== 'none' || config.preferredTerrain !== 'none' || config.preferTrickRoom || config.preferTailwind || config.teamArchetype) && (
+            {(config.isMonotype || config.preferredWeather !== 'none' || config.preferredTerrain !== 'none' || config.preferTrickRoom || config.preferTailwind || config.teamArchetype || config.enableMega || config.enableGmax || config.enableTera || config.enableZMoves || config.enableDynamax) && (
               <div className="flex flex-wrap gap-2 animate-in fade-in">
+                {config.enableMega && (
+                  <span className="px-3 py-1.5 bg-violet-500/15 border border-violet-500/30 rounded-lg text-[9px] font-black uppercase tracking-wider text-violet-400 flex items-center gap-1.5">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    Mega Evolution
+                  </span>
+                )}
+                {config.enableGmax && (
+                  <span className="px-3 py-1.5 bg-rose-500/15 border border-rose-500/30 rounded-lg text-[9px] font-black uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    Gigantamax
+                  </span>
+                )}
+                {config.enableTera && (
+                  <span className="px-3 py-1.5 bg-cyan-500/15 border border-cyan-500/30 rounded-lg text-[9px] font-black uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+                    Tera{config.preferredTeraType ? `: ${config.preferredTeraType}` : ''}
+                  </span>
+                )}
+                {config.enableZMoves && (
+                  <span className="px-3 py-1.5 bg-yellow-500/15 border border-yellow-500/30 rounded-lg text-[9px] font-black uppercase tracking-wider text-yellow-400 flex items-center gap-1.5">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="m13 2-2 2.5h3L12 7"/></svg>
+                    Z-Moves
+                  </span>
+                )}
+                {config.enableDynamax && (
+                  <span className="px-3 py-1.5 bg-rose-500/15 border border-rose-500/30 rounded-lg text-[9px] font-black uppercase tracking-wider text-rose-400 flex items-center gap-1.5">
+                    <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="12" cy="12" r="10"/><path d="M12 2v20"/><path d="M2 12h20"/></svg>
+                    Dynamax
+                  </span>
+                )}
                 {config.isMonotype && config.monoTypeSelected && (
                   <span className="px-3 py-1.5 bg-amber-500/15 border border-amber-500/30 rounded-lg text-[9px] font-black uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
                     <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>

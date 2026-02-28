@@ -14,6 +14,12 @@ const POKEMON_TYPES = [
   'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy'
 ];
 
+const TERA_TYPES = [
+  'Normal', 'Fire', 'Water', 'Grass', 'Electric', 'Ice',
+  'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug',
+  'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Stellar'
+];
+
 const TYPE_TRANSLATIONS_MAP: Record<string, string> = {
   Normal: 'Normal', Fire: 'Fuego', Water: 'Agua', Grass: 'Planta', Electric: 'Electrico',
   Ice: 'Hielo', Fighting: 'Lucha', Poison: 'Veneno', Ground: 'Tierra', Flying: 'Volador',
@@ -186,6 +192,104 @@ export default function SidebarFilters({ config, setConfig }: any) {
         </div>
       </div>
 
+      {/* Special Mechanics */}
+      <div>
+        <label className="text-[9px] uppercase font-black text-cyan-400 tracking-[0.2em] flex items-center gap-1.5 mb-2.5">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-cyan-400"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+          Mecanicas Especiales
+        </label>
+        <div className="space-y-1 bg-secondary/30 p-3.5 rounded-xl border border-border">
+          <ToggleItem
+            label="Mega Evolution"
+            checked={config.enableMega || false}
+            onChange={(v: boolean) => updateConfig('enableMega', v)}
+            color="violet"
+          />
+          <ToggleItem
+            label="Gigantamax (Gmax)"
+            checked={config.enableGmax || false}
+            onChange={(v: boolean) => {
+              updateConfig('enableGmax', v);
+              if (v) updateConfig('enableDynamax', true);
+            }}
+            color="rose"
+          />
+          <ToggleItem
+            label="Dynamax"
+            checked={config.enableDynamax || false}
+            onChange={(v: boolean) => {
+              updateConfig('enableDynamax', v);
+              if (!v) updateConfig('enableGmax', false);
+            }}
+            color="rose"
+          />
+          <ToggleItem
+            label="Z-Moves"
+            checked={config.enableZMoves || false}
+            onChange={(v: boolean) => updateConfig('enableZMoves', v)}
+            color="amber"
+          />
+          <div className="pt-1">
+            <ToggleItem
+              label="Teracristalizacion"
+              checked={config.enableTera ?? true}
+              onChange={(v: boolean) => {
+                updateConfig('enableTera', v);
+                if (!v) updateConfig('preferredTeraType', '');
+              }}
+              color="cyan"
+            />
+            {config.enableTera && (
+              <select
+                value={config.preferredTeraType || ''}
+                onChange={(e) => updateConfig('preferredTeraType', e.target.value)}
+                className="w-full mt-2 bg-secondary/50 border border-cyan-500/30 rounded-lg px-3 py-2.5 text-[10px] font-bold text-foreground outline-none focus:ring-2 focus:ring-cyan-500/40 cursor-pointer appearance-none"
+                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2322d3ee' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 10px center' }}
+              >
+                <option value="">Tera Type libre (IA decide)</option>
+                {TERA_TYPES.map(t => (
+                  <option key={t} value={t.toLowerCase()}>{TYPE_TRANSLATIONS_MAP[t] || t}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Regional Forms */}
+      <div>
+        <label className="text-[9px] uppercase font-black text-emerald-400 tracking-[0.2em] flex items-center gap-1.5 mb-2.5">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-emerald-400"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Formas Regionales
+        </label>
+        <div className="space-y-1 bg-secondary/30 p-3.5 rounded-xl border border-border">
+          <ToggleItem
+            label="Alola (Ninetales, Exeggutor...)"
+            checked={config.includeAlola ?? true}
+            onChange={(v: boolean) => updateConfig('includeAlola', v)}
+            color="sky"
+          />
+          <ToggleItem
+            label="Galar (Ponyta, Corsola...)"
+            checked={config.includeGalar ?? true}
+            onChange={(v: boolean) => updateConfig('includeGalar', v)}
+            color="red"
+          />
+          <ToggleItem
+            label="Hisui (Goodra, Zoroark...)"
+            checked={config.includeHisui ?? true}
+            onChange={(v: boolean) => updateConfig('includeHisui', v)}
+            color="amber"
+          />
+          <ToggleItem
+            label="Paldea (Tauros, Wooper...)"
+            checked={config.includePaldea ?? true}
+            onChange={(v: boolean) => updateConfig('includePaldea', v)}
+            color="emerald"
+          />
+        </div>
+      </div>
+
       {/* Advanced Toggle */}
       <button
         onClick={() => setShowAdvanced(!showAdvanced)}
@@ -284,6 +388,9 @@ function ToggleItem({ label, checked, onChange, color = "red" }: { label: string
     amber: { bg: 'bg-amber-500', border: 'border-amber-500', dot: 'bg-primary-foreground' },
     sky: { bg: 'bg-sky-500', border: 'border-sky-500', dot: 'bg-primary-foreground' },
     emerald: { bg: 'bg-emerald-500', border: 'border-emerald-500', dot: 'bg-primary-foreground' },
+    violet: { bg: 'bg-violet-500', border: 'border-violet-500', dot: 'bg-primary-foreground' },
+    rose: { bg: 'bg-rose-500', border: 'border-rose-500', dot: 'bg-primary-foreground' },
+    cyan: { bg: 'bg-cyan-500', border: 'border-cyan-500', dot: 'bg-primary-foreground' },
   };
   const c = colorClasses[color] || colorClasses.red;
 
