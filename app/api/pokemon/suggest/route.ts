@@ -78,57 +78,52 @@ function buildModeModifiers(config: any): string {
   let m = "";
   if (config.isLittleCup) m += " FORMATO LITTLE CUP (Solo pre-evoluciones nivel 5).";
   if (config.isRandomizer) m += " ESTRATEGIAS CAÓTICAS Y RANDOM.";
-  if (config.isMonotype && config.monoTypeSelected) m += ` MODO MONOTYPE: TODOS los Pokémon del equipo DEBEN ser de tipo ${config.monoTypeSelected} (al menos como tipo primario o secundario). Es OBLIGATORIO.`;
-  if (config.preferredWeather && config.preferredWeather !== 'none') m += ` PRIORIZA clima ${config.preferredWeather}. Incluye un setter de este clima y Pokémon que se beneficien de él.`;
-  if (config.preferredTerrain && config.preferredTerrain !== 'none') m += ` PRIORIZA terreno ${config.preferredTerrain}. Incluye un setter de este terreno y Pokémon que se beneficien de él.`;
+  if (config.isMonotype && config.monoTypeSelected) m += ` MODO MONOTYPE: TODOS los Pokémon del equipo DEBEN ser de tipo ${config.monoTypeSelected}.`;
+  if (config.preferredWeather && config.preferredWeather !== 'none') m += ` PRIORIZA clima ${config.preferredWeather}. Incluye un setter de este clima.`;
+  if (config.preferredTerrain && config.preferredTerrain !== 'none') m += ` PRIORIZA terreno ${config.preferredTerrain}. Incluye un setter.`;
   if (config.preferTrickRoom) m += " PRIORIZA Trick Room: incluye un setter de Trick Room y Pokémon lentos con alto ataque.";
-  if (config.preferTailwind) m += " PRIORIZA Tailwind: incluye un setter de Tailwind y Pokémon que se beneficien del aumento de velocidad.";
-  if (config.teamArchetype === 'offense') m += " ARQUETIPO OFENSIVO: Prioriza Pokémon con alto ataque/ataque especial y velocidad.";
-  if (config.teamArchetype === 'balance') m += " ARQUETIPO BALANCE: Mezcla atacantes y defensivos.";
-  if (config.teamArchetype === 'stall') m += " ARQUETIPO DEFENSIVO/STALL: Prioriza Pokémon con altas defensas, recuperación y moves de estado.";
-  if (config.enableMega) m += " MEGA EVOLUTION: Puedes usar hasta 1 Mega Evolution en el equipo. Incluye el item Mega Stone correspondiente.";
-  if (config.enableGmax) m += " GIGANTAMAX: Puedes incluir Pokemon con formas Gigantamax.";
-  if (config.enableDynamax && !config.enableGmax) m += " DYNAMAX: Dynamax esta habilitado.";
-  if (config.enableZMoves) m += " Z-MOVES: Puedes asignar 1 Z-Crystal a un Pokemon del equipo.";
+  if (config.preferTailwind) m += " PRIORIZA Tailwind: incluye un setter de Tailwind y abusers rápidos.";
+  if (config.teamArchetype === 'offense') m += " ARQUETIPO OFENSIVO: Prioriza Pokémon rápidos que golpeen fuerte (Setup Sweepers, Wallbreakers).";
+  if (config.teamArchetype === 'balance') m += " ARQUETIPO BALANCE: Núcleo defensivo robusto + 2 o 3 atacantes.";
+  if (config.teamArchetype === 'stall') m += " ARQUETIPO STALL: Prioriza Pokémon con altas defensas, Toxic, Hazards y Recover/Soft-Boiled.";
+  if (config.enableMega) m += " MEGA EVOLUTION: Asigna la Mega Stone correspondiente a 1 miembro.";
+  if (config.enableZMoves) m += " Z-MOVES: Puedes asignar 1 Z-Crystal.";
   if (config.enableTera) {
     m += config.preferredTeraType
       ? ` TERACRISTALIZACION ACTIVA: prioriza tipo ${config.preferredTeraType}. Incluye "teraType" en cada build.`
       : ` TERACRISTALIZACION ACTIVA: Incluye "teraType" en cada build con el Tera Type mas estrategico.`;
   }
-  const regionalParts: string[] = [];
-  if (config.includeAlola) regionalParts.push("Alola");
-  if (config.includeGalar) regionalParts.push("Galar");
-  if (config.includeHisui) regionalParts.push("Hisui");
-  if (config.includePaldea) regionalParts.push("Paldea");
-  if (regionalParts.length > 0 && regionalParts.length < 4) {
-    m += ` FORMAS REGIONALES: Considera variantes regionales de ${regionalParts.join(', ')}.`;
-  }
   return m;
 }
 
+const ELITE_COMPETITIVE_RULES = `
+  4. LÓGICA COMPETITIVA AVANZADA (NIVEL VGC/SMOGON ÉLITE):
+     - REGLA CHOICE / ASSAULT VEST: Si un Pokémon lleva "Choice Band/Specs/Scarf" o "Assault Vest", SUS 4 MOVIMIENTOS DEBEN SER DE DAÑO DIRECTO (Cero movimientos de estado).
+     - EVIOLITE (MINERAL EVOLUTIVO): Si seleccionas una pre-evolución viable (ej. Porygon2, Chansey, Bisharp, Clefairy, Dusclops, Dipplin), debes equiparle 'Eviolite' casi obligatoriamente para multiplicar su bulk.
+     - OBJETOS EXCLUSIVOS: Usa 'Light Ball' para Pikachu, 'Thick Club' para Marowak, y 'Soul Dew' para Latios/Latias si corresponde.
+     - DINÁMICAS DE PESO: Considera el peso del Pokémon. Si es súper pesado (ej. Snorlax, Celesteela), ponle 'Heavy Slam'. Advierte en debilidades si el equipo teme a 'Grass Knot'.
+     - SINERGIAS DINÁMICAS: Evalúa habilidades. Si asignas un Setter de Clima (Drizzle/Drought), asegúrate de incluir abusers (Swift Swim/Chlorophyll). Utiliza redirectores (Follow Me/Rage Powder) si el equipo necesita proteger Setups o Trick Room.
+     - REGLA AIR BALLOON: NUNCA le des "Air Balloon" a un Pokémon de tipo Volador o con la habilidad Levitación.
+`;
+
 export async function POST(request: Request) {
   try {
-    // Auth protection
     const { user, error: authError } = await requireAuth();
     if (authError) return authError;
 
-    // PROTECCION DE ORIGEN
     const origin = request.headers.get('origin');
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
     if (process.env.NODE_ENV === 'production' && siteUrl && origin !== siteUrl) {
       return NextResponse.json({ error: "ACCESO_DENEGADO", message: "Petición no autorizada." }, { status: 403 });
     }
 
-    // RATE LIMITING
     if (isRateLimited(user!.id)) {
       return NextResponse.json({
         error: "DEMASIADAS_PETICIONES",
-        message: "Has superado el límite de escaneos tácticos. Por favor, espera 1 minuto."
+        message: "Has superado el límite. Por favor, espera 1 minuto."
       }, { status: 429 });
     }
 
-    // ── PARSE BODY ────────────────────────────────────────────────
-    // scratchMode = true → generar equipo completo sin líder
     const { leaderId, config, lockedIds = [], ignoredIds = [], scratchMode = false } = await request.json();
     if (!API_KEY) return NextResponse.json({ error: "Falta API Key" }, { status: 500 });
 
@@ -136,64 +131,78 @@ export async function POST(request: Request) {
     const hasItemClause = config.clauses?.some((c: string) => c.toLowerCase().includes('item clause'));
     const itemClauseRule = hasItemClause
       ? "3. ITEM CLAUSE ACTIVA (¡MUY IMPORTANTE!): ESTÁ TOTALMENTE PROHIBIDO REPETIR OBJETOS. Los 6 Pokémon DEBEN tener un objeto diferente."
-      : "3. OBJETOS: Intenta dar variedad de objetos al equipo.";
+      : "3. OBJETOS: Intenta dar variedad de objetos al equipo, pero usa Eviolite y Objetos Exclusivos donde sea matemáticamente óptimo.";
+    
     const experiencePrompt = config.experienceLevel === 'novato'
       ? `MODO NOVATO: Explica la estrategia de forma simple y didáctica.`
-      : `MODO EXPERTO: Utiliza jerga competitiva avanzada de Smogon y VGC.`;
+      : `MODO EXPERTO: Utiliza jerga competitiva avanzada de Smogon y VGC (Entry Hazards, Sweepers, Pivots, Speed Tiers, Checks/Counters).`;
 
     // ═══════════════════════════════════════════════════════════════
-    // MODO SCRATCH — Sin líder, equipo completo generado por la IA
-    // La validación del líder NO corre aquí — leaderId puede ser null
+    // MODO SCRATCH
     // ═══════════════════════════════════════════════════════════════
     if (scratchMode) {
       const rawPool: any[] = await prisma.$queryRaw`
-        SELECT p.*, am.perfil_estrategico
+        SELECT p.id, p.nombre, p.tipo1, p.tipo2, am.perfil_estrategico, am.usage_score, am.tier
         FROM "Pokemon" p
         JOIN "AnalisisMeta" am ON p.id = am.pokemon_id
-        ORDER BY RANDOM()
+        ORDER BY COALESCE(am.usage_score, 0) DESC, RANDOM()
         LIMIT 120
       `;
 
-      const candidatePool = rawPool
-        .filter(p => !isExcluded(p.nombre, config))
-        .slice(0, 40);
+      const filteredPool = rawPool.filter(p => !isExcluded(p.nombre, config));
+      const highMeta = filteredPool.filter(p => (p.usage_score ?? 0) > 20).slice(0, 20);
+      const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3 && (p.usage_score ?? 0) <= 20).slice(0, 14);
+      const niche    = filteredPool.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 6);
+      const candidatePool = [...highMeta, ...viable, ...niche];
 
-      const candidatesString = candidatePool
-        .map(c => `[ID: ${c.id}] ${c.nombre} (Rol: ${c.perfil_estrategico})`)
-        .join('\n');
+      const candidatesString = candidatePool.map(c => {
+        const tier = c.tier || 'Unranked';
+        const types = c.tipo2 ? `${c.tipo1}/${c.tipo2}` : c.tipo1;
+        const usage = c.usage_score ? `${Number(c.usage_score).toFixed(1)}%` : '—';
+        return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
+      }).join('\n');
 
       const scratchPrompt = `
-        Eres una IA de Análisis Táctico Pokémon de Nivel Mundial.
+        Eres el "Head Coach" y Analista Táctico Principal de un equipo campeón mundial de Pokémon. 
+        Tu objetivo es diseñar un equipo competitivo de grado comercial, matemáticamente perfecto y digno de un torneo regional.
+        
         FORMATO: ${config.format} | CLÁUSULAS: ${config.clauses?.join(', ')}.
-        MODIFICADORES: ${modeModifiers}
-        DIRECTIVA TÁCTICA: "${config.customStrategy || 'Crea el equipo más sinérgico y competitivo posible'}"
-        ${experiencePrompt}
+        MODIFICADORES DE MODO: ${modeModifiers}
+        DIRECTIVA TÁCTICA DEL USUARIO: "${config.customStrategy || 'Crea el equipo más sinérgico, balanceado y competitivo posible'}"
+        NIVEL DE EXPLICACIÓN: ${experiencePrompt}
 
-        MODO: GENERACIÓN DESDE CERO — Elige los mejores 6 Pokémon del pool para la directiva táctica indicada.
-        CANDIDATOS DISPONIBLES:\n${candidatesString}
+        CANDIDATOS DISPONIBLES (Filtrados por viabilidad):
+        ${candidatesString}
 
-        REGLAS CRÍTICAS:
-        1. LEGALIDAD DE MOVIMIENTOS: NUNCA inventes ataques.
-        2. LEGALIDAD DE OBJETOS: Usa solo objetos reales competitivos.
+        --- ROLES Y MACRO-ESTRATEGIA (¡CRÍTICO!) ---
+        Debes ensamblar exactamente 6 Pokémon que funcionen como un ecosistema perfecto.
+        - NÚCLEOS DEFENSIVOS (Cores): Intenta formar un núcleo Fuego/Agua/Planta (FWG) o un núcleo Hada/Dragón/Acero (FDS).
+        - CONTROL DE VELOCIDAD (Speed Control): Incluye herramientas de control de velocidad pertinentes al formato.
+        - CONTROL DE HAZARDS (Singles): Obligatorio incluir Trampa Rocas (Stealth Rock) y un eliminador (Defog, Rapid Spin).
+        - MOMENTUM: Prioriza Pivots (U-turn, Volt Switch, Parting Shot).
+
+        --- OPTIMIZACIÓN DE STATS (EVs e IVs) ---
+        - EVS COMPETITIVOS: Usa EVs especializados (no solo 252/252/4 a ciegas) para tanques.
+        - IVS PERFECTOS: Atacantes especiales puros DEBEN tener "0 Atk" en sus IVs (para Foul Play/Confusión). Pokémon de Trick Room DEBEN tener "0 Spe".
+
+        --- REGLAS ESTRICTAS DE TORNEO ---
+        1. LEGALIDAD: NUNCA inventes ataques ni habilidades. Usa solo el movepool legal.
         ${itemClauseRule}
-        4. REGLA CHOICE / ASSAULT VEST: Si llevan estos items, todos sus moves deben ser de daño directo.
-        5. REGLA AIR BALLOON: NUNCA a Voladores o Levitación.
-        6. Usa ÚNICAMENTE los [ID] numéricos en "selected_ids" y "builds".
-        7. NUNCA menciones los IDs en el texto del reporte.
-
-        SELECCIONA EXACTAMENTE 6 IDs y genera builds para todos.
+        ${ELITE_COMPETITIVE_RULES}
+        5. FORMATO DE SALIDA: En los arrays de "selected_ids", usa ÚNICAMENTE los números enteros.
+        6. REDACCIÓN DEL REPORTE: Sé exhaustivo. Describe las "Win Conditions". NUNCA menciones los IDs numéricos en tu texto.
 
         DEVUELVE SOLO JSON:
         {
           "report": {
-            "estrategia": "Explica la estrategia usando \\n\\n para separar párrafos.",
-            "ventajas": ["Ventaja 1"],
-            "debilidades": ["Debilidad 1"],
-            "leads": [{ "pokemon": "Nombre", "condicion_uso": "Usar contra...", "condicion_cambio": "Cambiar si..." }]
+            "estrategia": "Escribe un análisis magistral. Usa \\n\\n para párrafos. Incluye: 1) Visión general. 2) Sinergia de los núcleos (Cores). 3) Condiciones de Victoria (Win Conditions). 4) Mecánicas avanzadas aplicadas.",
+            "ventajas": ["Ventaja táctica 1", "Ventaja 2"],
+            "debilidades": ["Debilidad 1", "Debilidad 2"],
+            "leads": [{ "pokemon": "Nombre", "condicion_uso": "Ideal contra...", "condicion_cambio": "Cambiar si..." }]
           },
           "selected_ids": [123, 456, 789, 321, 654, 987],
           "builds": {
-            "123": { "item": "...", "ability": "...", "nature": "...", "evs": "...", "ivs": "...", "moves": ["...", "...", "...", "..."], "teraType": "..." }
+            "123": { "item": "...", "ability": "...", "nature": "...", "evs": "252 HP / 252 Def / 4 SpD", "ivs": "31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe", "moves": ["...", "...", "...", "..."], "teraType": "..." }
           }
         }
       `;
@@ -209,17 +218,11 @@ export async function POST(request: Request) {
         finalTeam = [...finalTeam, ...unused.slice(0, 6 - finalTeam.length)];
       }
 
-      return NextResponse.json({
-        team: finalTeam,
-        validLockedIds: [],
-        aiReport: aiData.report,
-        builds: aiData.builds,
-        isDynamicMode: false,
-      });
+      return NextResponse.json({ team: finalTeam, validLockedIds: [], aiReport: aiData.report, builds: aiData.builds, isDynamicMode: false });
     }
 
     // ═══════════════════════════════════════════════════════════════
-    // MODO NORMAL — Con líder (código original sin cambios)
+    // MODO NORMAL (CON MOTOR VECTORIAL)
     // ═══════════════════════════════════════════════════════════════
     const lockedDbPokemon = await prisma.pokemon.findMany({ where: { id: { in: lockedIds.map(Number) } } });
     const validLockedIds: number[] = [];
@@ -243,7 +246,7 @@ export async function POST(request: Request) {
 
     const leaderLegalMoves = await getLegalMovesFromPokeAPI(leaderName);
     const leaderConstraints = leaderLegalMoves
-      ? `\n\nATENCIÓN: EL LÍDER (${leaderName}) TIENE UN MOVEPOOL RESTRINGIDO. SUS MOVIMIENTOS LEGALES SON: [${leaderLegalMoves}]. NUNCA ASIGNES OTRO MOVIMIENTO A ESTE POKÉMON.`
+      ? `\n\nATENCIÓN: EL LÍDER (${leaderName}) TIENE UN MOVEPOOL RESTRINGIDO: [${leaderLegalMoves}]. NUNCA ASIGNES OTRO MOVIMIENTO A ESTE POKÉMON.`
       : "";
 
     const leaderData: any[] = await prisma.$queryRaw`SELECT embedding::text as embedding FROM "AnalisisMeta" WHERE pokemon_id = ${parseInt(leaderId)} LIMIT 1`;
@@ -253,13 +256,28 @@ export async function POST(request: Request) {
 
     if (leaderData && leaderData.length > 0 && leaderData[0].embedding) {
       const vectorStr = leaderData[0].embedding;
-      rawSuggestions = await prisma.$queryRaw`SELECT p.*, am.perfil_estrategico FROM "Pokemon" p JOIN "AnalisisMeta" am ON p.id = am.pokemon_id WHERE p.id != ${parseInt(leaderId)} ORDER BY am.embedding <=> ${vectorStr}::vector LIMIT 80`;
+      rawSuggestions = await prisma.$queryRaw`
+        SELECT p.id, p.nombre, p.tipo1, p.tipo2, am.perfil_estrategico, am.usage_score, am.tier
+        FROM "Pokemon" p
+        JOIN "AnalisisMeta" am ON p.id = am.pokemon_id
+        WHERE p.id != ${parseInt(leaderId)}
+        ORDER BY (am.embedding <=> ${vectorStr}::vector)
+               * (1.0 - LEAST(COALESCE(am.usage_score, 0) / 50.0, 0.4))
+        LIMIT 80
+      `;
     } else {
       isDynamicMode = true;
-      rawSuggestions = await prisma.$queryRaw`SELECT p.*, am.perfil_estrategico FROM "Pokemon" p JOIN "AnalisisMeta" am ON p.id = am.pokemon_id WHERE p.id != ${parseInt(leaderId)} ORDER BY RANDOM() LIMIT 80`;
+      rawSuggestions = await prisma.$queryRaw`
+        SELECT p.id, p.nombre, p.tipo1, p.tipo2, am.perfil_estrategico, am.usage_score, am.tier
+        FROM "Pokemon" p
+        JOIN "AnalisisMeta" am ON p.id = am.pokemon_id
+        WHERE p.id != ${parseInt(leaderId)}
+        ORDER BY COALESCE(am.usage_score, 0) DESC, RANDOM()
+        LIMIT 80
+      `;
     }
 
-    const candidatePool = rawSuggestions.filter(p => {
+    const filtered = rawSuggestions.filter(p => {
       const name = p.nombre.toLowerCase();
       if (!config.allowParadox && PARADOX_LIST.includes(name)) return false;
       if (!config.allowUB && UB_LIST.includes(name)) return false;
@@ -268,49 +286,65 @@ export async function POST(request: Request) {
       if (validLockedIds.includes(p.id)) return false;
       if (ignoredIds.includes(p.id)) return false;
       return true;
-    }).slice(0, 30);
+    });
+
+    const highMeta = filtered.filter(p => (p.usage_score ?? 0) > 20).slice(0, 14);
+    const viable   = filtered.filter(p => (p.usage_score ?? 0) > 3 && (p.usage_score ?? 0) <= 20).slice(0, 12);
+    const niche    = filtered.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 4);
+    const candidatePool = [...highMeta, ...viable, ...niche];
 
     const slotsToFill = 6 - validLockedIds.length;
-    const candidatesString = candidatePool.map(c => `[ID: ${c.id}] ${c.nombre} (Rol: ${c.perfil_estrategico})`).join('\n');
+
+    const candidatesString = candidatePool.map(c => {
+      const tier = c.tier || 'Unranked';
+      const types = c.tipo2 ? `${c.tipo1}/${c.tipo2}` : c.tipo1;
+      const usage = c.usage_score ? `${Number(c.usage_score).toFixed(1)}%` : '—';
+      return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
+    }).join('\n');
+    
     const lockedString = lockedDbPokemon.filter(p => validLockedIds.includes(p.id)).map(p => `[ID: ${p.id}] ${p.nombre}`).join('\n');
 
     const prompt = `
-      Eres una IA de Análisis Táctico Pokémon de Nivel Mundial.
-      FORMATO: ${config.format} | CLÁUSULAS: ${config.clauses.join(', ')}.
+      Eres el "Head Coach" y Analista Táctico Principal de un equipo campeón mundial de Pokémon.
+      Tu trabajo es tomar a un LÍDER elegido por el usuario y rodearlo de 5 escoltas matemáticamente perfectos.
+
+      FORMATO COMPETITIVO: ${config.format} | CLÁUSULAS: ${config.clauses.join(', ')}.
       MODIFICADORES: ${modeModifiers}
-      DIRECTIVA: "${config.customStrategy || 'Sinergia meta'}"
-      ${experiencePrompt}
+      DIRECTIVA TÁCTICA DEL USUARIO: "${config.customStrategy || 'Sinergia absoluta con el líder'}"
+      NIVEL DE EXPLICACIÓN: ${experiencePrompt}
       
       LÍDER DEL EQUIPO: ${leaderName}. ${leaderConstraints}
+      MIEMBROS FIJADOS OBLIGATORIOS: \n${lockedString}
 
-      FIJADOS OBLIGATORIOS: \n${lockedString}
-      CANDIDATOS DISPONIBLES: \n${candidatesString}
-      
-      REGLAS CRÍTICAS DE TORNEO:
-      1. LEGALIDAD DE MOVIMIENTOS: NUNCA inventes ataques.
-      2. LEGALIDAD DE OBJETOS: Usa solo objetos reales competitivos.
+      CANDIDATOS RECOMENDADOS POR IA VECTORIAL:
+      ${candidatesString}
+
+      --- MACRO-ESTRATEGIA Y CONSTRUCCIÓN ALREDEDOR DEL LÍDER ---
+      - COBERTURA CRUZADA: Selecciona compañeros que cubran perfectamente las debilidades del Líder.
+      - CORES ELEMENTALES: Cierra el núcleo (FWG o FDS).
+      - SOPORTE: Si el líder es un Setup Sweeper, acompáñalo de redirectores o Memento/Parting Shot.
+      - OPTIMIZACIÓN DE IVS/EVS: Pon "0 Atk" a atacantes especiales puros y "0 Spe" a Trick Roomers.
+
+      --- REGLAS ESTRICTAS DE TORNEO ---
+      1. LEGALIDAD: Usa solo objetos y movimientos competitivos reales. NUNCA inventes.
       ${itemClauseRule}
-      4. LÓGICA COMPETITIVA AVANZADA:
-         - REGLA CHOICE / ASSAULT VEST: Si un Pokémon lleva "Choice Band", "Choice Specs", "Choice Scarf" o "Assault Vest", SUS 4 MOVIMIENTOS DEBEN SER DE DAÑO DIRECTO (Cero movimientos de estado).
-         - REGLA AIR BALLOON: NUNCA le des "Air Balloon" a un Pokémon de tipo Volador o con Levitación.
-      5. PRE-EVOLUCIONES: Si no es Little Cup, evítalas salvo que tengan Eviolite.
-      6. FORMATO: En "selected_ids" y "builds", responde usando ÚNICAMENTE los [ID] numéricos.
-      7. REDACCIÓN: Usa doble salto de línea (\\n\\n) para separar párrafos en tu reporte. NUNCA menciones los IDs numéricos en el texto.
-      8. USA LOS POKEMONS META PRIMERO: Prioriza Pokémon con análisis de meta fuertes y sinergias claras con el líder y entre sí. Evita picks "creativos" sin fundamento competitivo sólido solo para cumplir la cuota de 6.
-      
-      SELECCIONA EXACTAMENTE ${slotsToFill} IDs y GENERA BUILDS PARA LOS 6 POKÉMON.
+      ${ELITE_COMPETITIVE_RULES}
+      5. FORMATO DE SALIDA: En los arrays de "selected_ids", responde usando ÚNICAMENTE los números enteros.
+      6. REDACCIÓN DEL REPORTE: Usa doble salto de línea (\\n\\n) para separar párrafos. NUNCA menciones los IDs numéricos en tu texto.
+
+      SELECCIONA EXACTAMENTE ${slotsToFill} IDs ADICIONALES Y GENERA BUILDS NIVEL MUNDIAL PARA TODOS LOS 6 POKÉMON (Incluyendo al líder).
 
       DEVUELVE SOLO JSON:
       {
         "report": {
-          "estrategia": "Explica la estrategia, usando \\n\\n para separar párrafos.",
-          "ventajas": ["Ventaja 1"],
-          "debilidades": ["Debilidad 1"],
-          "leads": [{ "pokemon": "Nombre", "condicion_uso": "Usar contra...", "condicion_cambio": "Cambiar si..." }]
+          "estrategia": "Redacta un análisis táctico separando con \\n\\n. Incluye: 1) Cómo opera el equipo alrededor de ${leaderName}. 2) Núcleos defensivos. 3) Win Conditions.",
+          "ventajas": ["Ventaja táctica 1", "Ventaja 2"],
+          "debilidades": ["Debilidad 1", "Debilidad 2"],
+          "leads": [{ "pokemon": "Nombre", "condicion_uso": "Usar contra...", "condicion_cambio": "Hacer pivot si..." }]
         },
         "selected_ids": [123, 456],
         "builds": {
-          "123": { "item": "...", "ability": "...", "nature": "...", "evs": "...", "ivs": "...", "moves": ["...", "...", "...", "..."], "teraType": "..." }
+          "123": { "item": "...", "ability": "...", "nature": "...", "evs": "252 HP / 252 Def / 4 SpD", "ivs": "31 HP / 0 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe", "moves": ["...", "...", "...", "..."], "teraType": "..." }
         }
       }
     `;

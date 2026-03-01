@@ -37,6 +37,16 @@ async function generateWithFallback(prompt: string) {
   throw lastError;
 }
 
+// ─── BLOQUE DE REGLAS COMPETITIVAS ÉLITE PARA EL JUEZ ───────────
+const ELITE_COMPETITIVE_RULES = `
+  CRITERIOS DE PENALIZACIÓN SEVERA (RESTA PUNTOS SI EL USUARIO FALLA AQUÍ):
+  - REGLA CHOICE / ASSAULT VEST: Si un Pokémon lleva "Choice Band/Specs/Scarf" o "Assault Vest", SUS 4 MOVIMIENTOS DEBEN SER DE DAÑO DIRECTO. Si tienen Protect o Danza Espada con estos objetos, asume que el usuario es novato y penalízalo.
+  - EVIOLITE (MINERAL EVOLUTIVO): Pre-evoluciones viables (ej. Porygon2, Dusclops, Clefairy) sin Eviolite son un error táctico crítico.
+  - OBJETOS EXCLUSIVOS: Si usan Pikachu sin Light Ball, o Marowak sin Thick Club, es un fallo garrafal.
+  - SINERGIAS DE CLIMA/TERRENO: Si hay un Pokémon con Drizzle/Drought pero no hay abusadores (Swift Swim/Chlorophyll), el clima está desperdiciado.
+  - CONTROL DE VELOCIDAD: Equipos sin Tailwind, Trick Room, Icy Wind o usuarios veloces (Scarf) son presa fácil en el meta moderno.
+`;
+
 export async function POST(request: Request) {
   try {
     // Auth protection
@@ -75,15 +85,19 @@ export async function POST(request: Request) {
       : '';
 
     const prompt = `
-      Eres un juez competitivo de Pokemon de Nivel Mundial, especialista en ${format || 'VGC Doubles'}.
+      Eres el Juez Principal y Head Coach de un campeonato mundial de Pokémon.
+      Tu trabajo es evaluar y DESTROZAR CONSTRUCTIVAMENTE el equipo propuesto por un jugador.
+      FORMATO A EVALUAR: ${format || 'VGC Doubles'}
       ${mechanicsNote}
 
-      EQUIPO A EVALUAR:
+      EQUIPO PROPUESTO:
       ${teamDescription}
 
-      INSTRUCCIONES:
-      Evalua este equipo de forma CRITICA y HONESTA. No seas complaciente.
-      Analiza la sinergia entre los miembros, la cobertura de tipos, el speed control, los matchups y la consistencia general.
+      INSTRUCCIONES DE EVALUACIÓN NIVEL ÉLITE:
+      Evalúa este equipo con la máxima rigurosidad táctica. No seas complaciente.
+      Analiza la sinergia (Cores FWG/FDS), el speed control, los matchups (¿quién los frena en seco?) y la optimización de los EVs/Items.
+      
+      ${ELITE_COMPETITIVE_RULES}
 
       DEVUELVE SOLO JSON con este formato exacto:
       {
@@ -95,22 +109,22 @@ export async function POST(request: Request) {
           "matchupSpread": 8,
           "consistencia": 7
         },
-        "analysis": "Texto detallado del analisis general...",
-        "weakPoints": ["Debilidad 1", "Debilidad 2"],
-        "suggestions": ["Sugerencia de mejora 1", "Sugerencia 2"],
+        "analysis": "Texto detallado del analisis general usando jerga VGC/Smogon...",
+        "weakPoints": ["Debilidad crítica 1 (Ej. Extremadamente vulnerable a prioridad de Sucker Punch)", "Debilidad 2"],
+        "suggestions": ["Sugerencia concreta 1 (Ej. Cambiar Leftovers por Eviolite en Dusclops)", "Sugerencia 2"],
         "pokemonRatings": {
-          "NombrePokemon": { "score": 8, "comment": "Comentario sobre este Pokemon..." }
+          "NombrePokemon": { "score": 8, "comment": "Comentario agresivo pero útil sobre la build de este Pokémon..." }
         }
       }
 
-      REGLAS:
-      - score general: promedio ponderado de las categorias, con 1 decimal
-      - Cada categoria va de 1 a 10
-      - analysis: 2-3 parrafos separados por \\n\\n
-      - weakPoints: 2-4 debilidades principales
-      - suggestions: 2-4 sugerencias concretas de mejora
-      - pokemonRatings: una entrada por cada Pokemon del equipo con score (1-10) y comentario corto
-      - Se HONESTO: un equipo aleatorio deberia tener 3-4 puntos. Un equipo meta solido 7-8. Solo 9+ para equipos optimizados.
+      REGLAS DE FORMATO:
+      - score general: promedio ponderado de las categorias, con 1 decimal (Escala 1 a 10).
+      - Cada categoria va de 1 a 10.
+      - analysis: 2-3 parrafos separados por \\n\\n detallando las "Win Conditions" del equipo.
+      - weakPoints: 2-4 debilidades tácticas principales.
+      - suggestions: 2-4 sugerencias directas de cambios de objetos, moves o Pokémon.
+      - pokemonRatings: una entrada por cada Pokemon del equipo con score (1-10) y comentario corto.
+      - SÉ HONESTO: Un equipo de 6 sweepers sin Protect/Hazards debe tener 3 puntos. Solo dale 9+ si cumple con sinergias avanzadas, control de velocidad y objetos matemáticamente correctos.
     `;
 
     const result = await generateWithFallback(prompt);
