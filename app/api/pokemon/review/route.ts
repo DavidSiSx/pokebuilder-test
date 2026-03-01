@@ -5,9 +5,8 @@ import { requireAuth } from '@/lib/supabase/apiAuth';
 const API_KEY = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY || "";
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// Rate limiting per user for review
 const reviewRateLimitMap = new Map<string, number[]>();
-const RATE_LIMIT_WINDOW = 3600000; // 1 hour
+const RATE_LIMIT_WINDOW = 3600000;
 const MAX_REVIEWS_PER_HOUR = 10;
 
 function isReviewRateLimited(userId: string) {
@@ -37,7 +36,6 @@ async function generateWithFallback(prompt: string) {
   throw lastError;
 }
 
-// ─── BLOQUE DE REGLAS COMPETITIVAS ÉLITE PARA EL JUEZ ───────────
 const ELITE_COMPETITIVE_RULES = `
   CRITERIOS DE PENALIZACIÓN SEVERA (RESTA PUNTOS SI EL USUARIO FALLA AQUÍ):
   - REGLA CHOICE / ASSAULT VEST: Si un Pokémon lleva "Choice Band/Specs/Scarf" o "Assault Vest", SUS 4 MOVIMIENTOS DEBEN SER DE DAÑO DIRECTO. Si tienen Protect o Danza Espada con estos objetos, asume que el usuario es novato y penalízalo.
@@ -49,11 +47,9 @@ const ELITE_COMPETITIVE_RULES = `
 
 export async function POST(request: Request) {
   try {
-    // Auth protection
     const { user, error: authError } = await requireAuth();
     if (authError) return authError;
 
-    // Rate limiting
     if (isReviewRateLimited(user!.id)) {
       return NextResponse.json(
         { error: "RATE_LIMITED", message: "Maximo 10 reviews por hora. Espera un momento." },
@@ -68,7 +64,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Equipo invalido. Debe tener entre 1 y 6 Pokemon." }, { status: 400 });
     }
 
-    // Build team description for the prompt
     const teamDescription = team.map((p: any, i: number) => {
       return `${i + 1}. ${p.name}
    - Item: ${p.item || 'Ninguno'}
@@ -86,45 +81,41 @@ export async function POST(request: Request) {
 
     const prompt = `
       Eres el Juez Principal y Head Coach de un campeonato mundial de Pokémon.
-      Tu trabajo es evaluar y DESTROZAR CONSTRUCTIVAMENTE el equipo propuesto por un jugador.
-      FORMATO A EVALUAR: ${format || 'VGC Doubles'}
+      FORMATO: ${format || 'VGC Doubles'}
       ${mechanicsNote}
 
       EQUIPO PROPUESTO:
       ${teamDescription}
 
-      INSTRUCCIONES DE EVALUACIÓN NIVEL ÉLITE:
-      Evalúa este equipo con la máxima rigurosidad táctica. No seas complaciente.
-      Analiza la sinergia (Cores FWG/FDS), el speed control, los matchups (¿quién los frena en seco?) y la optimización de los EVs/Items.
-      
       ${ELITE_COMPETITIVE_RULES}
 
-      DEVUELVE SOLO JSON con este formato exacto:
+      DEVUELVE SOLO JSON con este formato exacto (TODAS LAS PUNTUACIONES SON SOBRE 100, no sobre 10):
       {
-        "score": 7.5,
+        "score": 74,
+        "grade": "B+",
         "categories": {
-          "sinergia": 8,
-          "cobertura": 7,
-          "speedControl": 6,
-          "matchupSpread": 8,
-          "consistencia": 7
+          "sinergia":      { "score": 80, "label": "Sinergia de Equipo",   "desc": "Frase corta evaluando la sinergia" },
+          "cobertura":     { "score": 70, "label": "Cobertura Ofensiva",   "desc": "Frase corta sobre cobertura de tipos" },
+          "speedControl":  { "score": 60, "label": "Control de Velocidad", "desc": "Tailwind/Trick Room/Scarf presentes o no" },
+          "matchupSpread": { "score": 75, "label": "Spread de Matchups",   "desc": "Qué tan bien responde a meta amenazas" },
+          "itemsOptim":    { "score": 85, "label": "Optimización Items",   "desc": "Objetos matemáticamente correctos o no" },
+          "consistencia":  { "score": 65, "label": "Consistencia",         "desc": "Qué tan fiable es el plan de juego" },
+          "originalidad":  { "score": 55, "label": "Factor Sorpresa",      "desc": "Qué tan predecible es el equipo en el meta" }
         },
-        "analysis": "Texto detallado del analisis general usando jerga VGC/Smogon...",
-        "weakPoints": ["Debilidad crítica 1 (Ej. Extremadamente vulnerable a prioridad de Sucker Punch)", "Debilidad 2"],
-        "suggestions": ["Sugerencia concreta 1 (Ej. Cambiar Leftovers por Eviolite en Dusclops)", "Sugerencia 2"],
+        "analysis": "2-3 párrafos con \\n\\n sobre las Win Conditions del equipo y su viabilidad en el meta actual.",
+        "weakPoints": ["Debilidad crítica 1", "Debilidad 2", "Debilidad 3"],
+        "suggestions": ["Sugerencia concreta 1", "Sugerencia 2", "Sugerencia 3"],
         "pokemonRatings": {
-          "NombrePokemon": { "score": 8, "comment": "Comentario agresivo pero útil sobre la build de este Pokémon..." }
-        }
+          "NombrePokemon": { "score": 82, "comment": "Comentario agresivo pero útil sobre la build de este Pokémon..." }
+        },
+        "metaVerdict": "Una frase corta y contundente sobre el potencial del equipo en torneos. Ej: 'Viable en regionales, frágil contra rain.' Máx 15 palabras."
       }
 
-      REGLAS DE FORMATO:
-      - score general: promedio ponderado de las categorias, con 1 decimal (Escala 1 a 10).
-      - Cada categoria va de 1 a 10.
-      - analysis: 2-3 parrafos separados por \\n\\n detallando las "Win Conditions" del equipo.
-      - weakPoints: 2-4 debilidades tácticas principales.
-      - suggestions: 2-4 sugerencias directas de cambios de objetos, moves o Pokémon.
-      - pokemonRatings: una entrada por cada Pokemon del equipo con score (1-10) y comentario corto.
-      - SÉ HONESTO: Un equipo de 6 sweepers sin Protect/Hazards debe tener 3 puntos. Solo dale 9+ si cumple con sinergias avanzadas, control de velocidad y objetos matemáticamente correctos.
+      REGLAS:
+      - score general: promedio ponderado de las 7 categorías, número entero.
+      - grade: A+ A A- B+ B B- C+ C D F según el score (90+ = A+, 85+ = A, 80+ = A-, 75+ = B+, 70+ = B, 65+ = B-, 60+ = C+, 55+ = C, 45+ = D, <45 = F).
+      - Cada categoría: score entero 0-100.
+      - Sé HONESTO: Un equipo sin Protect en ningún Pokémon en Doubles debe tener speedControl < 40. Solo da 85+ si cumple con sinergias avanzadas.
     `;
 
     const result = await generateWithFallback(prompt);
