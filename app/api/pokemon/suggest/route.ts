@@ -26,10 +26,45 @@ const MYTHICAL_LIST  = ["mew","celebi","jirachi","deoxys","phione","manaphy","da
 const LEGENDARY_LIST = ["articuno","zapdos","moltres","mewtwo","raikou","entei","suicune","lugia","ho-oh","regirock","regice","registeel","latias","latios","kyogre","groudon","rayquaza","uxie","mesprit","azelf","dialga","palkia","heatran","regigigas","giratina","cresselia","cobalion","terrakion","virizion","tornadus","thundurus","reshiram","zekrom","landorus","kyurem","xerneas","yveltal","zygarde","type: null","silvally","tapu koko","tapu lele","tapu bulu","tapu fini","cosmog","cosmoem","solgaleo","lunala","necrozma","zacian","zamazenta","eternatus","kubfu","urshifu","regieleki","regidrago","glastrier","spectrier","calyrex","enamorus","wo-chien","chien-pao","ting-lu","chi-yu","koraidon","miraidon","okidogi","munkidori","fezandipiti","ogerpon","terapagos"];
 const LITTLE_CUP_LIST = ["bulbasaur","charmander","squirtle","caterpie","weedle","pidgey","rattata","spearow","ekans","pichu","sandshrew","nidoran-f","nidoran-m","cleffa","vulpix","igglybuff","zubat","oddish","paras","venonat","diglett","meowth","psyduck","mankey","growlithe","poliwag","abra","machop","bellsprout","tentacool","geodude","ponyta","slowpoke","magnemite","farfetchd","doduo","seel","grimer","shellder","gastly","onix","drowzee","krabby","voltorb","exeggcute","cubone","koffing","rhyhorn","horsea","goldeen","staryu","mime-jr","smoochum","elekid","magby","dratini","togepi","chikorita","cyndaquil","totodile","sentret","hoothoot","ledyba","spinarak","chinchou","natu","mareep","marill","hoppip","sunkern","wooper","murkrow","misdreavus","unown","wynaut","girafarig","pineco","dunsparce","gligar","snubbull","slugma","swinub","corsola","remoraid","delibird","skarmory","houndour","phanpy","stantler","teddiursa","wingull","ralts","surskit","shroomish","slakoth","nincada","whismur","makuhita","azurill","nosepass","skitty","sableye","mawile","aron","meditite","electrike","plusle","minun","volbeat","illumise","budew","roselia","gulpin","carvanha","wailmer","trapinch","cacnea","swablu","zangoose","seviper","lunatone","solrock","barboach","corphish","baltoy","lileep","anorith","feebas","castform","kecleon","shuppet","duskull","tropius","snorunt","spheal","clamperl","relicanth","luvdisc","bagon","beldum","turtwig","chimchar","piplup","starly","bidoof","kricketot","shinx","cranidos","shieldon","burmy","cherubi","shellos","drifloon","buneary","glameow","chingling","stunky","bronzor","bonsly","happiny","chatot","spiritomb","gible","munchlax","riolu","hippopotas","skorupi","toxicroak","carnivine","finneon","mantyke","snover","rotom","snivy","tepig","oshawott","patrat","lillipup","purrloin","blitzle","roggenrola","woobat","drilbur","audino","timburr","tympole","throh","sawk","sewaddle","venipede","cottonee","petilil","sandile","darumaka","maractus","dwebble","scraggy","sigilyph","tirtouga","archen","trubbish","zorua","minccino","gothita","solosis","ducklett","vanillite","deerling","emolga","karrablast","foongus","frillish","alomomola","joltik","ferroseed","klink","tynamo","elgyem","litwick","axew","cubchoo","cryogonal","shelmet","stunfisk","mienfoo","druddigon","golett","pawniard","bouffalant","rufflet","vullaby","deino","larvesta","chespin","fennekin","froakie","bunnelby","fletchling","scatterbug","litleo","flabebe","skiddo","pancham","espurr","honedge","spritzee","swirlix","inkay","binacle","skrelp","clauncher","helioptile","tyrunt","amaura","hawlucha","dedenne","carbink","goomy","klefki","phantump","pumpkaboo","bergmite","noibat","rowlet","litten","popplio","pikipek","yungoos","grubbin","crabrawler","oricorio","cutiefly","rockruff","wishiwashi","mareanie","mudbray","dewpider","fomantis","morelull","salandit","stufful","bounsweet","comfey","oranguru","passimian","wimpod","sandygast","pyukumuku","type-null","jangmo-o","grookey","scorbunny","sobble","skwovet","wooloo","gossifleur","blipbug","nickit","chewtle","yamper","rolycoly","applin","silicobra","cramorant","arrokuda","toxel","sizzlipede","clobbopus","pincurchin","snom","stonjourner","eiscue","indeedee","morpeko","cufant","dreepy","sprigatito","fuecoco","quaxly","lechonk","tarountula","nymble","pawmi","tandemaus","fidough","shroodle","grafaiai","bramblin","toedscool","capsakid","rellor","flittle","tinkatink","charcadet","tadbulb","wattrel","maschiff","greavard","flamigo","klawf","nacli","glimmet","varoom","cyclizar","orthworm","revavroom","veluza","finizen","wiglett","tatsugiri","cetoddle","frigibax","gimmighoul","houndstone"];
 
+// ─────────────────────────────────────────────────────────────────
+// FIX BUG #1: Mapa de Mega Stones válidas por Pokémon.
+// La IA solo puede asignar una Mega Stone si el Pokémon aparece aquí.
+// Esto evita que invente items como "Infernapeite" o "Absolite".
+// ─────────────────────────────────────────────────────────────────
+const VALID_MEGA_STONES: Record<string, string> = {
+  "venusaur": "Venusaurite", "charizard": "Charizardite X", "blastoise": "Blastoisinite",
+  "alakazam": "Alakazite", "gengar": "Gengarite", "kangaskhan": "Kangaskhanite",
+  "pinsir": "Pinsirite", "gyarados": "Gyaradosite", "aerodactyl": "Aerodactylite",
+  "mewtwo": "Mewtwonite X", "ampharos": "Ampharosite", "scizor": "Scizorite",
+  "heracross": "Heracronite", "houndoom": "Houndoominite", "tyranitar": "Tyranitarite",
+  "blaziken": "Blazikenite", "gardevoir": "Gardevoirite", "mawile": "Mawilite",
+  "aggron": "Aggronite", "medicham": "Medichamite", "manectric": "Manectite",
+  "banette": "Banettite", "absol": "Absolite", "latias": "Latiasite",
+  "latios": "Latiosite", "garchomp": "Garchompite", "lucario": "Lucarionite",
+  "abomasnow": "Abomasite", "beedrill": "Beedrillite", "pidgeot": "Pidgeotite",
+  "slowbro": "Slowbronite", "steelix": "Steelixite", "sceptile": "Sceptilite",
+  "swampert": "Swampertite", "sableye": "Sablenite", "sharpedo": "Sharpedonite",
+  "camerupt": "Cameruptite", "altaria": "Altarianite", "glalie": "Glalitite",
+  "salamence": "Salamencite", "metagross": "Metagrossite", "rayquaza": "None (no stone needed)",
+  "lopunny": "Lopunnite", "gallade": "Galladite", "audino": "Audinite",
+  "diancie": "Diancite", "charizard-x": "Charizardite X", "charizard-y": "Charizardite Y",
+  "mewtwo-x": "Mewtwonite X", "mewtwo-y": "Mewtwonite Y",
+  "infernape": "", // NO tiene Mega — PROHIBIDO asignar Mega Stone
+};
+
+function getMegaStone(pokemonName: string): string | null {
+  const name = pokemonName.toLowerCase();
+  if (name in VALID_MEGA_STONES) {
+    const stone = VALID_MEGA_STONES[name];
+    return stone || null; // retorna null si está vacío (no tiene mega)
+  }
+  return null; // no está en la lista = no tiene mega
+}
+
 function toNum(id: any): number { return Number(id); }
 function idInList(id: any, list: number[]): boolean { return list.includes(toNum(id)); }
 
-// FIX: "gemini-3-flash" no existe — reemplazado por "gemini-1.5-flash"
+// FIX: "gemini-3-flash" no existe
 const MODEL_PRIORITY = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash"];
 
 async function generateWithFallback(prompt: string) {
@@ -62,7 +97,6 @@ function normalizeConfig(raw: any): any {
   return { ...raw, allowMythicals, allowMythical: allowMythicals };
 }
 
-// isExcluded: ÚNICA fuente de verdad para exclusiones
 function isExcluded(nombre: string, config: any): boolean {
   const name = nombre.toLowerCase();
   if (!config.allowParadox     && PARADOX_LIST.includes(name))   return true;
@@ -82,7 +116,6 @@ function applyMonotypeFilter(pool: any[], config: any): any[] {
   );
 }
 
-// FIX: filtrado de excludeIds en JS para evitar interpolación SQL insegura
 async function expandMonotypePool(mono: string, config: any, excludeIds: number[], limit: number): Promise<any[]> {
   try {
     const extra: any[] = await prisma.$queryRaw`
@@ -103,7 +136,6 @@ async function expandMonotypePool(mono: string, config: any, excludeIds: number[
   } catch { return []; }
 }
 
-// FIX: helper centralizado para deduplicar arrays por id
 function deduplicateById(arr: any[]): any[] {
   const seen = new Set<number>();
   return arr.filter(p => {
@@ -113,29 +145,82 @@ function deduplicateById(arr: any[]): any[] {
   });
 }
 
+// ─────────────────────────────────────────────────────────────────
+// FIX BUG #2: buildModeModifiers ahora incluye reglas NEGATIVAS
+// explícitas para mecánicas desactivadas, para que la IA no las
+// use aunque no estén en el prompt positivo.
+// FIX BUG #3: Regla de daño mixto para monotype explicitada aquí.
+// ─────────────────────────────────────────────────────────────────
 function buildModeModifiers(config: any): string {
   let m = "";
+
+  // ── Mecánicas ACTIVAS ──────────────────────────────────────────
   if (config.isLittleCup)  m += " FORMATO LITTLE CUP (Solo pre-evoluciones nivel 5, sin stone evolutiva).";
   if (config.isRandomizer) m += " ESTRATEGIAS CAÓTICAS Y RANDOM.";
+
   if (config.isMonotype && config.monoTypeSelected) {
-    m += ` MODO MONOTYPE: TODOS los Pokémon DEBEN ser de tipo ${config.monoTypeSelected}. El pool de candidatos YA está pre-filtrado por ese tipo, TODOS los IDs disponibles son válidos.`;
+    m += ` MODO MONOTYPE ${config.monoTypeSelected.toUpperCase()}: TODOS los Pokémon DEBEN ser de tipo ${config.monoTypeSelected}. El pool YA está pre-filtrado.`;
+    // FIX BUG #3: instrucción explícita de daño mixto en monotype
+    m += ` ADVERTENCIA MONOTYPE: Este tipo puede tener pocos atacantes especiales. DEBES incluir al menos 1 atacante especial (SpA) si existe en el pool. Si el tipo carece de atacantes especiales, incluye al menos 1 Pokémon mixto o con movimientos de estado que compensen. Reporta esta limitación en las debilidades.`;
   }
+
   if (config.preferredWeather && config.preferredWeather !== 'none') m += ` PRIORIZA clima ${config.preferredWeather}. Incluye un setter.`;
   if (config.preferredTerrain && config.preferredTerrain !== 'none') m += ` PRIORIZA terreno ${config.preferredTerrain}. Incluye un setter.`;
   if (config.preferTrickRoom) m += " PRIORIZA Trick Room: setter + Pokémon lentos con alto ataque.";
   if (config.preferTailwind)  m += " PRIORIZA Tailwind: setter + abusers rápidos.";
   if (config.teamArchetype === 'offense') m += " ARQUETIPO OFENSIVO.";
   if (config.teamArchetype === 'balance') m += " ARQUETIPO BALANCE.";
-  if (config.teamArchetype === 'stall')   m += " ARQUETIPO STALL.";
-  if (config.enableMega)   m += " MEGA EVOLUTION: Asigna la Mega Stone correcta a 1 miembro.";
-  if (config.enableZMoves) m += " Z-MOVES: Asigna 1 Z-Crystal al miembro más beneficiado.";
+  if (config.teamArchetype === 'stall')   m += " ARQUETIPO STALL/DEFENSIVO.";
+
+  if (config.enableMega) {
+    m += ` MEGA EVOLUTION ACTIVADA: Asigna la Mega Stone correcta a MÁXIMO 1 miembro.`;
+    m += ` REGLA CRÍTICA MEGA: Antes de asignar una Mega Stone, VERIFICA que el Pokémon realmente tiene Mega Evolución en el juego oficial. Si no tiene Mega Evolución confirmada, asígnale un item competitivo normal en su lugar.`;
+    m += ` Mega Stones válidas CONFIRMADAS: Venusaurite (Venusaur), Charizardite X/Y (Charizard), Blastoisinite (Blastoise), Alakazite (Alakazam), Gengarite (Gengar), Kangaskhanite (Kangaskhan), Pinsirite (Pinsir), Gyaradosite (Gyarados), Aerodactylite (Aerodactyl), Ampharosite (Ampharos), Scizorite (Scizor), Heracronite (Heracross), Houndoominite (Houndoom), Tyranitarite (Tyranitar), Blazikenite (Blaziken), Gardevoirite (Gardevoir), Mawilite (Mawile), Aggronite (Aggron), Medichamite (Medicham), Manectite (Manectric), Banettite (Banette), Absolite (Absol), Latiasite (Latias), Latiosite (Latios), Garchompite (Garchomp), Lucarionite (Lucario), Abomasite (Abomasnow), Beedrillite (Beedrill), Pidgeotite (Pidgeot), Slowbronite (Slowbro), Steelixite (Steelix), Sceptilite (Sceptile), Swampertite (Swampert), Sablenite (Sableye), Sharpedonite (Sharpedo), Cameruptite (Camerupt), Altarianite (Altaria), Glalitite (Glalie), Salamencite (Salamence), Metagrossite (Metagross), Lopunnite (Lopunny), Galladite (Gallade), Audinite (Audino), Diancite (Diancie). SOLO estas.`;
+  }
+
+  if (config.enableZMoves) m += " Z-MOVES ACTIVADOS: Asigna 1 Z-Crystal al miembro más beneficiado.";
+
   if (config.enableTera) {
     m += config.preferredTeraType
-      ? ` TERACRISTALIZACION: prioriza tipo ${config.preferredTeraType}.`
-      : ` TERACRISTALIZACION: incluye "teraType" con el Tera Type mas estrategico por Pokémon.`;
+      ? ` TERACRISTALIZACION ACTIVADA: prioriza tipo ${config.preferredTeraType}.`
+      : ` TERACRISTALIZACION ACTIVADA: incluye "teraType" con el Tera Type más estratégico por Pokémon.`;
   }
+
   if (config.allowLegendaries) m += " LEGENDARIOS PERMITIDOS: incluye 1-2 Legendarios top-tier si hay sinergia.";
   if (config.allowParadox)     m += " PARADOJAS PERMITIDAS: considera Pokémon Paradoja por su dominancia en el meta.";
+
+  // ── FIX BUG #2: Mecánicas DESACTIVADAS — reglas negativas explícitas ──
+  const prohibitions: string[] = [];
+
+  if (!config.enableMega) {
+    prohibitions.push("PROHIBIDO asignar Mega Stones (enableMega=false). Ningún item puede terminar en 'ite' o ser una Mega Stone.");
+  }
+  if (!config.enableZMoves) {
+    prohibitions.push("PROHIBIDO asignar Z-Crystals (enableZMoves=false). Ningún item puede ser un Z-Crystal.");
+  }
+  if (!config.enableTera) {
+    prohibitions.push("PROHIBIDO incluir teraType en ningún build (enableTera=false).");
+  }
+  if (!config.enableDynamax && !config.enableGmax) {
+    prohibitions.push("PROHIBIDO mencionar Dynamax o Gigantamax.");
+  }
+  if (!config.allowLegendaries) {
+    prohibitions.push(`PROHIBIDO incluir Legendarios en el equipo ni en las builds. Los siguientes Pokémon están EXCLUIDOS: ${LEGENDARY_LIST.slice(0, 20).join(', ')} y otros legendarios conocidos.`);
+  }
+  if (!config.allowMythicals) {
+    prohibitions.push(`PROHIBIDO incluir Pokémon Singulares/Mythicals: ${MYTHICAL_LIST.join(', ')}.`);
+  }
+  if (!config.allowParadox) {
+    prohibitions.push(`PROHIBIDO incluir Pokémon Paradoja: ${PARADOX_LIST.join(', ')}.`);
+  }
+  if (!config.allowUB) {
+    prohibitions.push(`PROHIBIDO incluir Ultra Bestias: ${UB_LIST.join(', ')}.`);
+  }
+
+  if (prohibitions.length > 0) {
+    m += `\n\n⛔ PROHIBICIONES ABSOLUTAS (NUNCA IGNORAR):\n${prohibitions.map((p, i) => `${i + 1}. ${p}`).join('\n')}`;
+  }
+
   return m;
 }
 
@@ -151,14 +236,14 @@ const ELITE_COMPETITIVE_RULES = `
      - REGLA CHOICE / ASSAULT VEST: Si un Pokémon lleva "Choice Band/Specs/Scarf" o "Assault Vest",
        SUS 4 MOVIMIENTOS DEBEN SER DE DAÑO DIRECTO (cero movimientos de estado).
      - EVIOLITE: Pre-evoluciones viables (Porygon2, Dusclops, Clefairy) deben llevar Eviolite.
-     - OBJETOS EXCLUSIVOS: 'Light Ball' para Pikachu, 'Thick Club' para Marowak.
+     - OBJETOS EXCLUSIVOS: 'Light Ball' SOLO para Pikachu, 'Thick Club' SOLO para Marowak.
      - SINERGIAS DINÁMICAS: Setter de Clima → incluye abusers (Swift Swim / Chlorophyll).
 
   4b. BALANCE OFENSIVO FÍSICO / ESPECIAL:
-     - El equipo DEBE tener al menos 2 atacantes físicos (Atk) y 2 especiales (SpA).
+     - El equipo DEBE tener al menos 2 atacantes físicos (Atk) y 2 especiales (SpA) SIEMPRE QUE EL POOL LO PERMITA.
+     - Si el modo Monotype restringe la diversidad ofensiva, incluye al menos 1 atacante mixto
+       o 1 Pokémon de soporte/estado que compense la falta de variedad ofensiva.
      - EXCEPCIÓN TRICK ROOM: No aplica bajo TR.
-     - EXCEPCIÓN MONOTYPE: Si el pool del tipo solo tiene un lado ofensivo, acepta el desequilibrio
-       pero incluye al menos 1 Pokémon mixto o de cobertura cruzada.
 
   5. TERMINOLOGÍA ESTRICTA (PROHIBIDO TRADUCIR JERGA):
      - Reporte en Español, pero movimientos/objetos/habilidades/mecánicas EN INGLÉS ORIGINAL.
@@ -166,13 +251,8 @@ const ELITE_COMPETITIVE_RULES = `
 `;
 
 // ─────────────────────────────────────────────────────────────────
-// PASO 2: Genera el reporte DESPUÉS de confirmar el equipo real.
-//
-// Este es el fix central al bug de "reporte menciona Pokémon que
-// no están en el equipo": antes, el reporte se generaba junto con
-// la selección, cuando la IA no sabía cuál sería el equipo final.
-// Ahora el reporte se genera en una segunda llamada, con el equipo
-// 100% confirmado — así solo puede mencionar los 6 miembros reales.
+// PASO 2: Genera el reporte con el equipo REAL confirmado.
+// Esto evita que la IA mencione Pokémon que no están en el equipo.
 // ─────────────────────────────────────────────────────────────────
 async function generateReport(
   confirmedTeam: any[],
@@ -201,7 +281,7 @@ async function generateReport(
 
     REGLA ABSOLUTA: Tu análisis SOLO puede mencionar los Pokémon listados arriba.
     PROHIBIDO mencionar cualquier Pokémon que no esté en este equipo.
-    Analiza sinergias, debilidades y estrategia EXCLUSIVAMENTE con estos miembros.
+    Si el equipo es Monotype, menciona explícitamente en debilidades si depende de un solo tipo de daño.
 
     DEVUELVE SOLO JSON:
     {
@@ -224,11 +304,10 @@ async function generateReport(
   }
 }
 
-// Fallback si la segunda llamada falla — siempre menciona solo el equipo real
 function buildFallbackReport(confirmedTeam: any[]): any {
   const names = confirmedTeam.map(p => p.nombre);
   return {
-    estrategia: `Equipo conformado por ${names.join(', ')}. Analiza sus sinergias de tipos y roles para definir la estrategia óptima.`,
+    estrategia: `Equipo conformado por ${names.join(', ')}.`,
     ventajas: ["Equipo generado con sinergia vectorial", "Builds competitivas asignadas"],
     debilidades: ["Revisar cobertura de tipos manualmente"],
     leads: confirmedTeam.slice(0, 2).map(p => ({
@@ -237,6 +316,62 @@ function buildFallbackReport(confirmedTeam: any[]): any {
       condicion_cambio: "Cambiar si hay desventaja de tipo clara"
     }))
   };
+}
+
+// ─────────────────────────────────────────────────────────────────
+// FIX BUG #1 POST-PROCESS: Después de recibir los builds de la IA,
+// validar y corregir items de Mega y mecánicas desactivadas.
+// ─────────────────────────────────────────────────────────────────
+function sanitizeBuilds(builds: Record<string, any>, config: any, candidatePool: any[]): Record<string, any> {
+  const sanitized: Record<string, any> = {};
+
+  for (const [id, build] of Object.entries(builds)) {
+    if (!build) continue;
+    const pokemon = candidatePool.find(p => p.id.toString() === id.toString());
+    const pokemonName = pokemon?.nombre?.toLowerCase() || '';
+    let item = build.item || '';
+
+    // FIX BUG #1: Si Mega está desactivado, eliminar cualquier Mega Stone
+    if (!config.enableMega) {
+      const isMegaStone = item.toLowerCase().endsWith('ite') &&
+        Object.values(VALID_MEGA_STONES).some(s => s.toLowerCase() === item.toLowerCase());
+      if (isMegaStone) {
+        item = 'Leftovers'; // item neutro de reemplazo
+      }
+    }
+
+    // FIX BUG #1: Si Mega está activo, validar que el Pokémon realmente tiene Mega
+    if (config.enableMega) {
+      const validStone = getMegaStone(pokemonName);
+      const isMegaStone = item.toLowerCase().endsWith('ite') &&
+        Object.values(VALID_MEGA_STONES).some(s => s.toLowerCase() === item.toLowerCase());
+      if (isMegaStone && validStone === null) {
+        // El Pokémon no tiene Mega — reemplazar con item normal
+        item = 'Life Orb';
+      }
+      if (isMegaStone && validStone && validStone.toLowerCase() !== item.toLowerCase()) {
+        // La Mega Stone es incorrecta para este Pokémon — corregir
+        item = validStone;
+      }
+    }
+
+    // FIX BUG #2: Si Z-Moves está desactivado, eliminar Z-Crystals
+    if (!config.enableZMoves) {
+      if (item.toLowerCase().endsWith('-z') || item.toLowerCase().includes('z-crystal') || item.toLowerCase().endsWith('ium z')) {
+        item = 'Leftovers';
+      }
+    }
+
+    // FIX BUG #2: Si Tera está desactivado, eliminar teraType
+    const sanitizedBuild = { ...build, item };
+    if (!config.enableTera) {
+      delete sanitizedBuild.teraType;
+    }
+
+    sanitized[id] = sanitizedBuild;
+  }
+
+  return sanitized;
 }
 
 export async function POST(request: Request) {
@@ -255,7 +390,6 @@ export async function POST(request: Request) {
     }
 
     const { leaderId, config: rawConfig, lockedIds = [], ignoredIds = [], scratchMode = false } = await request.json();
-
     const config = normalizeConfig(rawConfig);
 
     if (!API_KEY) return NextResponse.json({ error: "Falta API Key" }, { status: 500 });
@@ -311,8 +445,6 @@ export async function POST(request: Request) {
       const highMeta = filteredPool.filter(p => (p.usage_score ?? 0) > 15).slice(0, 20);
       const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 15).slice(0, 14);
       const niche    = filteredPool.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 6);
-
-      // FIX: deduplicar candidatePool antes de enviarlo a la IA
       const candidatePool = deduplicateById([...highMeta, ...viable, ...niche]);
 
       const slotsNeeded = Math.max(0, 6 - validScratchLockedIds.length);
@@ -325,21 +457,23 @@ export async function POST(request: Request) {
         const tier  = c.tier || 'Unranked';
         const types = c.tipo2 ? `${c.tipo1}/${c.tipo2}` : c.tipo1;
         const usage = c.usage_score ? `${Number(c.usage_score).toFixed(1)}%` : '—';
-        return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
+        // FIX BUG #1: indicar si el Pokémon tiene Mega disponible
+        const megaNote = config.enableMega ? (getMegaStone(c.nombre) ? ` [MEGA: ${getMegaStone(c.nombre)}]` : ' [SIN MEGA]') : '';
+        return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}${megaNote}`;
       }).join('\n');
 
-      // ── PASO 1: Selección de IDs y builds ────────────────────────
-      // El prompt NO pide reporte para evitar que la IA "imagine"
-      // miembros que luego no estarán en el equipo real.
+      // PASO 1: Selección de IDs y builds
       const selectionPrompt = `
         Eres el Analista Táctico Principal de un equipo campeón mundial de Pokémon.
         FORMATO: ${config.format} | CLÁUSULAS: ${config.clauses?.join(', ')}.
-        MODIFICADORES: ${modeModifiers}
+        MODIFICADORES Y PROHIBICIONES:
+        ${modeModifiers}
+
         DIRECTIVA: "${config.customStrategy || 'Crea el equipo más sinérgico posible'}"
         NIVEL DE ANÁLISIS: ${experiencePrompt}
 
         CANDIDATOS DISPONIBLES (${candidatePool.length} Pokémon):
-        CRUCIAL: NUNCA REPITAS POKEMONS. ASEGURA VARIEDAD ESTRATÉGICA.
+        NOTA: Los Pokémon marcados [SIN MEGA] NO tienen Mega Evolución — NUNCA asignarles Mega Stone.
         ${candidatesString}
 
         --- REGLAS ESTRICTAS ---
@@ -348,8 +482,9 @@ export async function POST(request: Request) {
         ${ELITE_COMPETITIVE_RULES}
         6. SOLO usa IDs de CANDIDATOS DISPONIBLES listados arriba. NUNCA inventes IDs.
            SELECCIONA EXACTAMENTE ${slotsNeeded} IDs DISTINTOS. PROHIBIDO REPETIR IDs.
+        7. RESPETA TODAS LAS PROHIBICIONES LISTADAS EN MODIFICADORES. Son absolutas.
 
-        DEVUELVE SOLO JSON (sin reporte, solo selección y builds):
+        DEVUELVE SOLO JSON (sin reporte):
         {
           "selected_ids": [123, 456, 789, 321, 654, 987],
           "builds": {
@@ -363,10 +498,7 @@ export async function POST(request: Request) {
       if (!selectionMatch) throw new Error("JSON inválido en selección");
       const selectionData = JSON.parse(selectionMatch[0]);
 
-      // FIX: Set<number> tipado explícito — corrige el error de TypeScript en build
       const selectedNums: number[] = [...new Set<number>((selectionData.selected_ids || []).map(Number))];
-
-      // FIX: deduplicar finalTeam por ID
       let finalTeam = deduplicateById(candidatePool.filter(p => selectedNums.includes(p.id)));
       if (finalTeam.length < slotsNeeded) {
         const usedIds = new Set(finalTeam.map(p => p.id));
@@ -374,25 +506,25 @@ export async function POST(request: Request) {
         finalTeam = [...finalTeam, ...extras];
       }
 
-      // ── PASO 2: Reporte con el equipo real confirmado ─────────────
+      // FIX BUG #1 y #2: Sanitizar builds antes de devolverlas
+      const sanitizedBuilds = sanitizeBuilds(selectionData.builds || {}, config, candidatePool);
+
       const lockedTeamData = validScratchLockedIds.length > 0
         ? await prisma.pokemon.findMany({ where: { id: { in: validScratchLockedIds } } })
         : [];
       const fullTeam = [...lockedTeamData, ...finalTeam];
 
+      // PASO 2: Reporte con equipo real confirmado
       const aiReport = await generateReport(
-        fullTeam,
-        config,
-        experiencePrompt,
-        modeModifiers,
-        JSON.stringify(selectionData.builds || {}, null, 2)
+        fullTeam, config, experiencePrompt, modeModifiers,
+        JSON.stringify(sanitizedBuilds, null, 2)
       );
 
       return NextResponse.json({
         team: finalTeam,
         validLockedIds: validScratchLockedIds,
         aiReport,
-        builds: selectionData.builds,
+        builds: sanitizedBuilds,
         isDynamicMode: false
       });
     }
@@ -481,15 +613,15 @@ export async function POST(request: Request) {
     const highMeta = filtered.filter(p => (p.usage_score ?? 0) > 20).slice(0, 14);
     const viable   = filtered.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 20).slice(0, 12);
     const niche    = filtered.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 4);
-
-    // FIX: deduplicar candidatePool por ID antes de enviarlo a la IA
     const candidatePool = deduplicateById([...highMeta, ...viable, ...niche].map(p => ({ ...p, id: toNum(p.id) })));
 
     const candidatesString = candidatePool.map(c => {
       const tier  = c.tier || 'Unranked';
       const types = c.tipo2 ? `${c.tipo1}/${c.tipo2}` : c.tipo1;
       const usage = c.usage_score ? `${Number(c.usage_score).toFixed(1)}%` : '—';
-      return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
+      // FIX BUG #1: indicar si el Pokémon tiene Mega disponible
+      const megaNote = config.enableMega ? (getMegaStone(c.nombre) ? ` [MEGA: ${getMegaStone(c.nombre)}]` : ' [SIN MEGA]') : '';
+      return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}${megaNote}`;
     }).join('\n');
 
     const lockedString = lockedDbPokemon
@@ -497,16 +629,19 @@ export async function POST(request: Request) {
       .map(p => `[ID: ${toNum(p.id)}] ${p.nombre}`)
       .join('\n');
 
-    // ── PASO 1: Selección de IDs y builds ────────────────────────
+    // PASO 1: Selección de IDs y builds
     const selectionPrompt = `
       Eres el Analista Táctico Principal de un equipo campeón mundial de Pokémon.
       FORMATO: ${config.format} | CLÁUSULAS: ${config.clauses.join(', ')}.
-      MODIFICADORES: ${modeModifiers}
+      MODIFICADORES Y PROHIBICIONES:
+      ${modeModifiers}
+
       NIVEL DE ANÁLISIS: ${experiencePrompt}
       LÍDER: ${leaderName}. ${leaderConstraints}
       FIJADOS:\n${lockedString}
 
       CANDIDATOS (${candidatePool.length} Pokémon, vectorizados por sinergia con el líder):
+      NOTA: Los Pokémon marcados [SIN MEGA] NO tienen Mega Evolución — NUNCA asignarles Mega Stone.
       ${candidatesString}
 
       --- REGLAS ESTRICTAS ---
@@ -515,8 +650,9 @@ export async function POST(request: Request) {
       ${ELITE_COMPETITIVE_RULES}
       6. SOLO usa IDs de CANDIDATOS listados arriba. NUNCA uses IDs externos.
          SELECCIONA EXACTAMENTE ${slotsToFill} IDs DISTINTOS. PROHIBIDO REPETIR IDs.
+      7. RESPETA TODAS LAS PROHIBICIONES LISTADAS EN MODIFICADORES. Son absolutas.
 
-      DEVUELVE SOLO JSON (sin reporte, solo selección y builds):
+      DEVUELVE SOLO JSON (sin reporte):
       {
         "selected_ids": [123, 456],
         "builds": {
@@ -530,10 +666,7 @@ export async function POST(request: Request) {
     if (!selectionMatch) throw new Error("JSON inválido en selección");
     const selectionData = JSON.parse(selectionMatch[0]);
 
-    // FIX: Set<number> tipado explícito — corrige el error de TypeScript en build
     const selectedNums: number[] = [...new Set<number>((selectionData.selected_ids || []).map(Number))];
-
-    // FIX: deduplicar finalTeamObjects por ID
     let finalTeamObjects = deduplicateById(candidatePool.filter(p => selectedNums.includes(p.id)));
     if (finalTeamObjects.length < slotsToFill) {
       const usedIds = new Set(finalTeamObjects.map(p => p.id));
@@ -541,25 +674,25 @@ export async function POST(request: Request) {
       finalTeamObjects = [...finalTeamObjects, ...extras];
     }
 
-    // ── PASO 2: Reporte con el equipo real confirmado ─────────────
+    // FIX BUG #1 y #2: Sanitizar builds antes de devolverlas
+    const sanitizedBuilds = sanitizeBuilds(selectionData.builds || {}, config, [...candidatePool, ...lockedDbPokemon]);
+
     const fullTeam = [
       ...lockedDbPokemon.filter(p => validLockedIds.includes(toNum(p.id))),
       ...finalTeamObjects
     ];
 
+    // PASO 2: Reporte con equipo real confirmado
     const aiReport = await generateReport(
-      fullTeam,
-      config,
-      experiencePrompt,
-      modeModifiers,
-      JSON.stringify(selectionData.builds || {}, null, 2)
+      fullTeam, config, experiencePrompt, modeModifiers,
+      JSON.stringify(sanitizedBuilds, null, 2)
     );
 
     return NextResponse.json({
       team: finalTeamObjects,
       validLockedIds,
       aiReport,
-      builds: selectionData.builds,
+      builds: sanitizedBuilds,
       isDynamicMode
     });
 
