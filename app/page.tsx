@@ -402,6 +402,21 @@ export default function Home() {
         }
       }
     }
+
+    // FIX DUPLICATES: final frontend guard — remove duplicate Pokemon by ID
+    const seenIds = new Set<number>();
+    for (let i = 0; i < newTeam.length; i++) {
+      const p = newTeam[i];
+      if (p) {
+        if (seenIds.has(p.id)) {
+          newTeam[i] = null;
+          newLocks[i] = false;
+        } else {
+          seenIds.add(p.id);
+        }
+      }
+    }
+
     return { newTeam, newLocks };
   }, [config.generationMode]);
 
