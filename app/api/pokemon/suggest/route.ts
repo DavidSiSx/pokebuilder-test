@@ -20,19 +20,13 @@ function isRateLimited(ip: string) {
   return false;
 }
 
-const PARADOX_LIST = ["great tusk", "scream tail", "brute bonnet", "flutter mane", "slither wing", "sandy shocks", "iron treads", "iron bundle", "iron hands", "iron jugulis", "iron moth", "iron thorns", "roaring moon", "iron valiant", "walking wake", "iron leaves", "gouging fire", "raging bolt", "iron boulder", "iron crown"];
-const UB_LIST = ["nihilego", "buzzwole", "pheromosa", "xurkitree", "celesteela", "kartana", "guzzlord", "poipole", "naganadel", "stakataka", "blacephalon"];
-const MYTHICAL_LIST = ["mew", "celebi", "jirachi", "deoxys", "phione", "manaphy", "darkrai", "shaymin", "arceus", "victini", "keldeo", "meloetta", "genesect", "diancie", "hoopa", "volcanion", "magearna", "marshadow", "zeraora", "meltan", "melmetal", "zarude", "pecharunt"];
-const LEGENDARY_LIST = [
-  "articuno", "zapdos", "moltres", "mewtwo", "raikou", "entei", "suicune", "lugia", "ho-oh",
-  "regirock", "regice", "registeel", "latias", "latios", "kyogre", "groudon", "rayquaza",
-  "uxie", "mesprit", "azelf", "dialga", "palkia", "heatran", "regigigas", "giratina", "cresselia",
-  "cobalion", "terrakion", "virizion", "tornadus", "thundurus", "reshiram", "zekrom", "landorus", "kyurem",
-  "xerneas", "yveltal", "zygarde", "type: null", "silvally", "tapu koko", "tapu lele", "tapu bulu", "tapu fini",
-  "cosmog", "cosmoem", "solgaleo", "lunala", "necrozma", "zacian", "zamazenta", "eternatus", "kubfu", "urshifu",
-  "regieleki", "regidrago", "glastrier", "spectrier", "calyrex", "enamorus", "wo-chien", "chien-pao", "ting-lu",
-  "chi-yu", "koraidon", "miraidon", "okidogi", "munkidori", "fezandipiti", "ogerpon", "terapagos"
-];
+const PARADOX_LIST   = ["great tusk","scream tail","brute bonnet","flutter mane","slither wing","sandy shocks","iron treads","iron bundle","iron hands","iron jugulis","iron moth","iron thorns","roaring moon","iron valiant","walking wake","iron leaves","gouging fire","raging bolt","iron boulder","iron crown"];
+const UB_LIST        = ["nihilego","buzzwole","pheromosa","xurkitree","celesteela","kartana","guzzlord","poipole","naganadel","stakataka","blacephalon"];
+const MYTHICAL_LIST  = ["mew","celebi","jirachi","deoxys","phione","manaphy","darkrai","shaymin","arceus","victini","keldeo","meloetta","genesect","diancie","hoopa","volcanion","magearna","marshadow","zeraora","meltan","melmetal","zarude","pecharunt"];
+const LEGENDARY_LIST = ["articuno","zapdos","moltres","mewtwo","raikou","entei","suicune","lugia","ho-oh","regirock","regice","registeel","latias","latios","kyogre","groudon","rayquaza","uxie","mesprit","azelf","dialga","palkia","heatran","regigigas","giratina","cresselia","cobalion","terrakion","virizion","tornadus","thundurus","reshiram","zekrom","landorus","kyurem","xerneas","yveltal","zygarde","type: null","silvally","tapu koko","tapu lele","tapu bulu","tapu fini","cosmog","cosmoem","solgaleo","lunala","necrozma","zacian","zamazenta","eternatus","kubfu","urshifu","regieleki","regidrago","glastrier","spectrier","calyrex","enamorus","wo-chien","chien-pao","ting-lu","chi-yu","koraidon","miraidon","okidogi","munkidori","fezandipiti","ogerpon","terapagos"];
+
+// Pre-evoluciones permitidas en Little Cup
+const LITTLE_CUP_LIST = ["bulbasaur","charmander","squirtle","caterpie","weedle","pidgey","rattata","spearow","ekans","pichu","sandshrew","nidoran-f","nidoran-m","cleffa","vulpix","igglybuff","zubat","oddish","paras","venonat","diglett","meowth","psyduck","mankey","growlithe","poliwag","abra","machop","bellsprout","tentacool","geodude","ponyta","slowpoke","magnemite","farfetchd","doduo","seel","grimer","shellder","gastly","onix","drowzee","krabby","voltorb","exeggcute","cubone","koffing","rhyhorn","horsea","goldeen","staryu","mime-jr","smoochum","elekid","magby","dratini","togepi","chikorita","cyndaquil","totodile","sentret","hoothoot","ledyba","spinarak","chinchou","pichu","cleffa","igglybuff","togepi","natu","mareep","marill","hoppip","sunkern","wooper","murkrow","misdreavus","unown","wynaut","girafarig","pineco","dunsparce","gligar","snubbull","slugma","swinub","corsola","remoraid","delibird","skarmory","houndour","phanpy","stantler","teddiursa","wingull","ralts","surskit","shroomish","slakoth","nincada","whismur","makuhita","azurill","nosepass","skitty","sableye","mawile","aron","meditite","electrike","plusle","minun","volbeat","illumise","budew","roselia","gulpin","carvanha","wailmer","trapinch","cacnea","swablu","zangoose","seviper","lunatone","solrock","barboach","corphish","baltoy","lileep","anorith","feebas","castform","kecleon","shuppet","duskull","tropius","wynaut","snorunt","spheal","clamperl","relicanth","luvdisc","bagon","beldum","turtwig","chimchar","piplup","starly","bidoof","kricketot","shinx","budew","cranidos","shieldon","burmy","cherubi","shellos","drifloon","buneary","glameow","chingling","stunky","bronzor","bonsly","mime-jr","happiny","chatot","spiritomb","gible","munchlax","riolu","hippopotas","skorupi","toxicroak","carnivine","finneon","mantyke","snover","rotom","uxie","mesprit","azelf","snivy","tepig","oshawott","patrat","lillipup","purrloin","blitzle","roggenrola","woobat","drilbur","audino","timburr","tympole","throh","sawk","sewaddle","venipede","cottonee","petilil","sandile","darumaka","maractus","dwebble","scraggy","sigilyph","tirtouga","archen","trubbish","zorua","minccino","gothita","solosis","ducklett","vanillite","deerling","emolga","karrablast","foongus","frillish","alomomola","joltik","ferroseed","klink","tynamo","elgyem","litwick","axew","cubchoo","cryogonal","shelmet","stunfisk","mienfoo","druddigon","golett","pawniard","bouffalant","rufflet","vullaby","deino","larvesta","chespin","fennekin","froakie","bunnelby","fletchling","scatterbug","litleo","flabebe","skiddo","pancham","espurr","honedge","spritzee","swirlix","inkay","binacle","skrelp","clauncher","helioptile","tyrunt","amaura","hawlucha","dedenne","carbink","goomy","klefki","phantump","pumpkaboo","bergmite","noibat","rowlet","litten","popplio","pikipek","yungoos","grubbin","crabrawler","oricorio","cutiefly","rockruff","wishiwashi","mareanie","mudbray","dewpider","fomantis","morelull","salandit","stufful","bounsweet","comfey","oranguru","passimian","wimpod","sandygast","pyukumuku","type-null","jangmo-o","grookey","scorbunny","sobble","skwovet","wooloo","gossifleur","blipbug","nickit","chewtle","yamper","rolycoly","applin","silicobra","cramorant","arrokuda","toxel","sizzlipede","clobbopus","pincurchin","snom","stonjourner","eiscue","indeedee","morpeko","cufant","dreepy","sprigatito","fuecoco","quaxly","lechonk","tarountula","nymble","pawmi","tandemaus","fidough","shroodle","grafaiai","bramblin","toedscool","capsakid","rellor","flittle","tinkatink","charcadet","tadbulb","wattrel","maschiff","shrugly","greavard","flamigo","klawf","nacli","glimmet","varoom","cyclizar","orthworm","shieldon","revavroom","veluza","finizen","wiglett","tatsugiri","cetoddle","frigibax","gimmighoul","greavard","houndstone"];
 
 function toNum(id: any): number { return Number(id); }
 function idInList(id: any, list: number[]): boolean { return list.includes(toNum(id)); }
@@ -64,49 +58,100 @@ async function getLegalMovesFromPokeAPI(pokemonName: string) {
   } catch { return null; }
 }
 
+// ─────────────────────────────────────────────────────────────────
+// FIX #1: Normalizar el config antes de cualquier uso.
+// El frontend puede enviar allowMythicals (plural) o allowMythical (singular).
+// Esta función unifica ambos bajo allowMythicals para uso interno.
+// ─────────────────────────────────────────────────────────────────
+function normalizeConfig(raw: any): any {
+  const allowMythicals = raw.allowMythicals ?? raw.allowMythical ?? true;
+  return { ...raw, allowMythicals, allowMythical: allowMythicals };
+}
+
+// ─────────────────────────────────────────────────────────────────
+// FIX #3: isExcluded es la ÚNICA fuente de verdad para exclusiones.
+// Toda la app llama a esta función — no hay lógica inline duplicada.
+// ─────────────────────────────────────────────────────────────────
 function isExcluded(nombre: string, config: any): boolean {
   const name = nombre.toLowerCase();
-  if (!config.allowParadox && PARADOX_LIST.includes(name)) return true;
-  if (!config.allowUB && UB_LIST.includes(name)) return true;
-  if (!config.allowMythical && MYTHICAL_LIST.includes(name)) return true;
+  if (!config.allowParadox     && PARADOX_LIST.includes(name))   return true;
+  if (!config.allowUB          && UB_LIST.includes(name))        return true;
+  if (!config.allowMythicals   && MYTHICAL_LIST.includes(name))  return true; // FIX #1
   if (!config.allowLegendaries && LEGENDARY_LIST.includes(name)) return true;
+  // FIX #6: Little Cup solo admite pre-evoluciones de la lista
+  if (config.isLittleCup && !LITTLE_CUP_LIST.includes(name))    return true;
   return false;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// FIX #2 + #5: Filtro de monotype aplicado AL POOL antes del prompt.
+// Funciona en modo normal y scratch. Incluye expansión de pool si
+// hay menos de N candidatos del tipo requerido.
+// ─────────────────────────────────────────────────────────────────
+function applyMonotypeFilter(pool: any[], config: any): any[] {
+  if (!config.isMonotype || !config.monoTypeSelected) return pool;
+  const mono = config.monoTypeSelected.toLowerCase();
+  return pool.filter(p =>
+    p.tipo1?.toLowerCase() === mono ||
+    p.tipo2?.toLowerCase() === mono
+  );
+}
+
+async function expandMonotypePool(mono: string, config: any, excludeIds: number[], limit: number): Promise<any[]> {
+  const excludePlaceholder = excludeIds.length > 0 ? excludeIds : [0];
+  try {
+    const extra: any[] = await prisma.$queryRaw`
+      SELECT p.id, p.nombre, p.tipo1, p.tipo2,
+             COALESCE(am.perfil_estrategico, '') as perfil_estrategico,
+             COALESCE(am.usage_score, 0)         as usage_score,
+             COALESCE(am.tier, 'Unranked')       as tier
+      FROM "Pokemon" p
+      LEFT JOIN "AnalisisMeta" am ON p.id = am.pokemon_id
+      WHERE (LOWER(p.tipo1) = ${mono} OR LOWER(p.tipo2) = ${mono})
+        AND p.id NOT IN (${excludePlaceholder.join(',')})
+      ORDER BY COALESCE(am.usage_score, 0) DESC
+      LIMIT ${limit}
+    `;
+    return extra
+      .filter(p => !isExcluded(p.nombre, config))
+      .map(p => ({ ...p, id: toNum(p.id) }));
+  } catch { return []; }
 }
 
 function buildModeModifiers(config: any): string {
   let m = "";
-  if (config.isLittleCup) m += " FORMATO LITTLE CUP (Solo pre-evoluciones nivel 5).";
+  if (config.isLittleCup)  m += " FORMATO LITTLE CUP (Solo pre-evoluciones nivel 5, sin stone evolutiva).";
   if (config.isRandomizer) m += " ESTRATEGIAS CAÓTICAS Y RANDOM.";
-  if (config.isMonotype && config.monoTypeSelected) m += ` MODO MONOTYPE: TODOS los Pokémon DEBEN ser de tipo ${config.monoTypeSelected}.`;
+  // FIX #2: el prompt ahora aclara que el pool YA está pre-filtrado
+  if (config.isMonotype && config.monoTypeSelected) {
+    m += ` MODO MONOTYPE: TODOS los Pokémon DEBEN ser de tipo ${config.monoTypeSelected}. El pool de candidatos YA está pre-filtrado por ese tipo, TODOS los IDs disponibles son válidos.`;
+  }
   if (config.preferredWeather && config.preferredWeather !== 'none') m += ` PRIORIZA clima ${config.preferredWeather}. Incluye un setter.`;
   if (config.preferredTerrain && config.preferredTerrain !== 'none') m += ` PRIORIZA terreno ${config.preferredTerrain}. Incluye un setter.`;
   if (config.preferTrickRoom) m += " PRIORIZA Trick Room: setter + Pokémon lentos con alto ataque.";
-  if (config.preferTailwind) m += " PRIORIZA Tailwind: setter + abusers rápidos.";
+  if (config.preferTailwind)  m += " PRIORIZA Tailwind: setter + abusers rápidos.";
   if (config.teamArchetype === 'offense') m += " ARQUETIPO OFENSIVO.";
   if (config.teamArchetype === 'balance') m += " ARQUETIPO BALANCE.";
-  if (config.teamArchetype === 'stall') m += " ARQUETIPO STALL.";
-  if (config.enableMega) m += " MEGA EVOLUTION: Asigna la Mega Stone a 1 miembro.";
-  if (config.enableZMoves) m += " Z-MOVES: Puedes asignar 1 Z-Crystal.";
+  if (config.teamArchetype === 'stall')   m += " ARQUETIPO STALL.";
+  if (config.enableMega)   m += " MEGA EVOLUTION: Asigna la Mega Stone correcta a 1 miembro.";
+  if (config.enableZMoves) m += " Z-MOVES: Asigna 1 Z-Crystal al miembro más beneficiado.";
   if (config.enableTera) {
     m += config.preferredTeraType
       ? ` TERACRISTALIZACION: prioriza tipo ${config.preferredTeraType}.`
-      : ` TERACRISTALIZACION: incluye "teraType" con el Tera Type mas estrategico.`;
+      : ` TERACRISTALIZACION: incluye "teraType" con el Tera Type mas estrategico por Pokémon.`;
   }
   if (config.allowLegendaries) m += " LEGENDARIOS PERMITIDOS: incluye 1-2 Legendarios top-tier si hay sinergia.";
-  if (config.allowParadox) m += " PARADOJAS PERMITIDAS: considera Pokémon Paradoja por su dominancia en el meta.";
+  if (config.allowParadox)     m += " PARADOJAS PERMITIDAS: considera Pokémon Paradoja por su dominancia en el meta.";
   return m;
 }
 
-// ─── Instrucción de nivel de análisis ────────────────────────────
-// Se construye aquí para reutilizarla en ambos prompts (scratch y normal).
 function buildExperiencePrompt(level: string): string {
   if (level === 'novato') {
-    return `MODO NOVATO: Redacta el análisis con lenguaje accesible, usa analogías para explicar las sinergias y aclara brevemente por qué cada decisión es buena. Mantén la jerga técnica en inglés (Trick Room, Pivot, etc.) pero explica su significado la primera vez que aparezca.`;
+    return `MODO NOVATO: Lenguaje accesible, usa analogías para explicar sinergias. Jerga técnica en inglés pero explícala la primera vez (ej: "Trick Room (campo que invierte el orden de velocidad)").`;
   }
-  return `MODO EXPERTO: Redacta el análisis asumiendo conocimiento avanzado de Smogon y VGC. Usa terminología técnica sin explicaciones básicas. Profundiza en matchups, speed tiers, damage calcs aproximados y win conditions específicas.`;
+  return `MODO EXPERTO: Conocimiento avanzado de Smogon/VGC asumido. Profundiza en matchups, speed tiers, damage calcs aproximados y win conditions. Sin explicaciones básicas.`;
 }
 
-// ─── REGLAS COMPETITIVAS ÉLITE ────────────────────────────────────
 const ELITE_COMPETITIVE_RULES = `
   4. LÓGICA COMPETITIVA AVANZADA (NIVEL VGC/SMOGON ÉLITE):
      - REGLA CHOICE / ASSAULT VEST: Si un Pokémon lleva "Choice Band/Specs/Scarf" o "Assault Vest",
@@ -117,22 +162,13 @@ const ELITE_COMPETITIVE_RULES = `
 
   4b. BALANCE OFENSIVO FÍSICO / ESPECIAL:
      - El equipo DEBE tener al menos 2 atacantes físicos (Atk) y 2 especiales (SpA).
-       Esto evita ser bloqueado por un único wall como Toxapex o Clefable.
-     - Atacantes físicos de referencia: Incineroar, Rillaboom, Urshifu, Landorus-T, Garchomp,
-       Dragonite, Zacian, Talonflame, Scizor, Mimikyu.
-     - Atacantes especiales de referencia: Flutter Mane, Miraidon, Heatran, Iron Bundle,
-       Calyrex-Shadow, Tapu Lele, Dragapult (SpA set), Hydreigon, Primarina, Volcarona.
-     - EXCEPCIÓN TRICK ROOM: Esta regla NO aplica bajo TR. Bajo TR prioriza los mejores
-       lentos disponibles sin restricción de balance, porque el Speed Control ya compensa
-       la falta de versatilidad ofensiva.
-     - EXCEPCIÓN MONOTYPE: Si el pool del tipo sólo tiene un lado, acepta el desequilibrio
+     - EXCEPCIÓN TRICK ROOM: No aplica bajo TR.
+     - EXCEPCIÓN MONOTYPE: Si el pool del tipo solo tiene un lado ofensivo, acepta el desequilibrio
        pero incluye al menos 1 Pokémon mixto o de cobertura cruzada.
 
   5. TERMINOLOGÍA ESTRICTA (PROHIBIDO TRADUCIR JERGA):
      - Reporte en Español, pero movimientos/objetos/habilidades/mecánicas EN INGLÉS ORIGINAL.
-     - SIEMPRE "Trick Room" (nunca "Habitación de Truco").
-     - SIEMPRE "Tailwind" (nunca "Viento Afín").
-     - Sin traducir: "Entry Hazards", "Setup Sweeper", "Speed Control", "Pivot", "Wallbreaker".
+     - SIEMPRE "Trick Room", "Tailwind", "Entry Hazards", "Setup Sweeper", "Speed Control", "Pivot", "Wallbreaker".
 `;
 
 export async function POST(request: Request) {
@@ -140,7 +176,7 @@ export async function POST(request: Request) {
     const { user, error: authError } = await requireAuth();
     if (authError) return authError;
 
-    const origin = request.headers.get('origin');
+    const origin  = request.headers.get('origin');
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
     if (process.env.NODE_ENV === 'production' && siteUrl && origin !== siteUrl) {
       return NextResponse.json({ error: "ACCESO_DENEGADO", message: "Petición no autorizada." }, { status: 403 });
@@ -150,28 +186,29 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "DEMASIADAS_PETICIONES", message: "Espera 1 minuto." }, { status: 429 });
     }
 
-    const { leaderId, config, lockedIds = [], ignoredIds = [], scratchMode = false } = await request.json();
+    const { leaderId, config: rawConfig, lockedIds = [], ignoredIds = [], scratchMode = false } = await request.json();
+
+    // FIX #1: normalizar config UNA VEZ, antes de cualquier uso
+    const config = normalizeConfig(rawConfig);
+
     if (!API_KEY) return NextResponse.json({ error: "Falta API Key" }, { status: 500 });
 
-    // Normalizar IDs (BigInt vs number)
-    const normalizedLockedIds: number[] = lockedIds.map(Number);
+    const normalizedLockedIds:  number[] = lockedIds.map(Number);
     const normalizedIgnoredIds: number[] = ignoredIds.map(Number);
 
-    const modeModifiers = buildModeModifiers(config);
-
-    // ─── Nivel de análisis — se inyecta en AMBOS prompts ─────────
+    const modeModifiers    = buildModeModifiers(config);
     const experiencePrompt = buildExperiencePrompt(config.experienceLevel);
 
     const hasItemClause = config.clauses?.some((c: string) => c.toLowerCase().includes('item clause'));
     const itemClauseRule = hasItemClause
-      ? "3. ITEM CLAUSE ACTIVA: PROHIBIDO REPETIR OBJETOS."
-      : "3. OBJETOS: Variedad, pero usa Eviolite y Objetos Exclusivos donde sea óptimo.";
+      ? "3. ITEM CLAUSE ACTIVA: PROHIBIDO REPETIR OBJETOS EN EL MISMO EQUIPO."
+      : "3. OBJETOS: Variedad estratégica. Prioriza Eviolite y Objetos Exclusivos donde corresponda.";
 
     // ═══════════════════════════════════════════════════════════════
     // MODO SCRATCH
     // ═══════════════════════════════════════════════════════════════
     if (scratchMode) {
-      const rawPool: any[] = await prisma.$queryRaw`
+      let rawPool: any[] = await prisma.$queryRaw`
         SELECT p.id, p.nombre, p.tipo1, p.tipo2, am.perfil_estrategico, am.usage_score, am.tier
         FROM "Pokemon" p
         JOIN "AnalisisMeta" am ON p.id = am.pokemon_id
@@ -179,18 +216,50 @@ export async function POST(request: Request) {
         LIMIT 150
       `;
 
-      const filteredPool = rawPool
+      // FIX #7: en scratch, validar lockedIds contra reglas de exclusión
+      const validScratchLockedIds: number[] = [];
+      if (normalizedLockedIds.length > 0) {
+        const lockedPokemon = await prisma.pokemon.findMany({ where: { id: { in: normalizedLockedIds } } });
+        for (const p of lockedPokemon) {
+          if (!isExcluded(p.nombre, config)) validScratchLockedIds.push(toNum(p.id));
+        }
+      }
+
+      // FIX #3: usar isExcluded como única fuente de verdad
+      let filteredPool = rawPool
         .filter(p => !idInList(p.id, normalizedIgnoredIds))
+        .filter(p => !idInList(p.id, validScratchLockedIds)) // excluir los ya fijados del pool de candidatos
         .filter(p => !isExcluded(p.nombre, config))
         .map(p => ({ ...p, id: toNum(p.id) }));
 
+      // FIX #5: aplicar filtro monotype en scratch mode
+      if (config.isMonotype && config.monoTypeSelected) {
+        const mono = config.monoTypeSelected.toLowerCase();
+        filteredPool = applyMonotypeFilter(filteredPool, config);
+
+        if (filteredPool.length < 6) {
+          const existingIds = [...filteredPool.map(p => p.id), ...validScratchLockedIds, ...normalizedIgnoredIds];
+          const extra = await expandMonotypePool(mono, config, existingIds, 40);
+          const seen  = new Set(filteredPool.map(p => p.id));
+          for (const p of extra) { if (!seen.has(p.id)) { filteredPool.push(p); seen.add(p.id); } }
+        }
+      }
+
       const highMeta = filteredPool.filter(p => (p.usage_score ?? 0) > 15).slice(0, 20);
-      const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3 && (p.usage_score ?? 0) <= 15).slice(0, 14);
+      const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 15).slice(0, 14);
       const niche    = filteredPool.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 6);
       const candidatePool = [...highMeta, ...viable, ...niche];
 
+      // FIX #4: validar que hay suficientes slots para llenar
+      const slotsNeeded = Math.max(0, 6 - validScratchLockedIds.length);
+      if (slotsNeeded === 0) {
+        // Todos los slots están fijados — no llamar a la IA, devolver directamente
+        const lockedFull = await prisma.pokemon.findMany({ where: { id: { in: validScratchLockedIds } } });
+        return NextResponse.json({ team: lockedFull, validLockedIds: validScratchLockedIds, aiReport: null, builds: {}, isDynamicMode: false });
+      }
+
       const candidatesString = candidatePool.map(c => {
-        const tier = c.tier || 'Unranked';
+        const tier  = c.tier || 'Unranked';
         const types = c.tipo2 ? `${c.tipo1}/${c.tipo2}` : c.tipo1;
         const usage = c.usage_score ? `${Number(c.usage_score).toFixed(1)}%` : '—';
         return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
@@ -203,7 +272,7 @@ export async function POST(request: Request) {
         DIRECTIVA: "${config.customStrategy || 'Crea el equipo más sinérgico posible'}"
         NIVEL DE ANÁLISIS: ${experiencePrompt}
 
-        CANDIDATOS DISPONIBLES:
+        CANDIDATOS DISPONIBLES (${candidatePool.length} Pokémon):
         ${candidatesString}
 
         --- MACRO-ESTRATEGIA ---
@@ -215,7 +284,8 @@ export async function POST(request: Request) {
         1. LEGALIDAD: NUNCA inventes ataques ni habilidades.
         ${itemClauseRule}
         ${ELITE_COMPETITIVE_RULES}
-        6. SOLO usa IDs de CANDIDATOS DISPONIBLES. NUNCA inventes IDs.
+        6. SOLO usa IDs de CANDIDATOS DISPONIBLES listados arriba. NUNCA inventes IDs ni uses IDs externos.
+           SELECCIONA EXACTAMENTE ${slotsNeeded} IDs para completar el equipo.
 
         DEVUELVE SOLO JSON:
         {
@@ -235,11 +305,17 @@ export async function POST(request: Request) {
 
       const selectedNums: number[] = (aiData.selected_ids || []).map(Number);
       let finalTeam = candidatePool.filter(p => selectedNums.includes(p.id));
-      if (finalTeam.length < 6) {
-        finalTeam = [...finalTeam, ...candidatePool.filter(p => !selectedNums.includes(p.id)).slice(0, 6 - finalTeam.length)];
+      if (finalTeam.length < slotsNeeded) {
+        finalTeam = [...finalTeam, ...candidatePool.filter(p => !selectedNums.includes(p.id)).slice(0, slotsNeeded - finalTeam.length)];
       }
 
-      return NextResponse.json({ team: finalTeam, validLockedIds: [], aiReport: aiData.report, builds: aiData.builds, isDynamicMode: false });
+      return NextResponse.json({
+        team: finalTeam,
+        validLockedIds: validScratchLockedIds,
+        aiReport: aiData.report,
+        builds: aiData.builds,
+        isDynamicMode: false
+      });
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -249,17 +325,29 @@ export async function POST(request: Request) {
     const validLockedIds: number[] = [];
 
     for (const p of lockedDbPokemon) {
-      const name = p.nombre.toLowerCase();
-      let isValid = true;
-      if (!config.allowParadox && PARADOX_LIST.includes(name)) isValid = false;
-      if (!config.allowUB && UB_LIST.includes(name)) isValid = false;
-      if (!config.allowMythical && MYTHICAL_LIST.includes(name)) isValid = false;
-      if (!config.allowLegendaries && LEGENDARY_LIST.includes(name)) isValid = false;
-      if (isValid) validLockedIds.push(toNum(p.id));
+      // FIX #3: usar isExcluded, no lógica inline
+      if (!isExcluded(p.nombre, config)) {
+        validLockedIds.push(toNum(p.id));
+      }
     }
 
     if (!validLockedIds.includes(Number(leaderId))) {
       return NextResponse.json({ error: "REGLA_VIOLADA", message: "Tu líder viola las exclusiones actuales." }, { status: 400 });
+    }
+
+    // FIX #4: calcular slotsToFill antes del prompt y validarlo
+    const slotsToFill = 6 - validLockedIds.length;
+    if (slotsToFill === 0) {
+      // Equipo completo con fijados — generar solo builds, sin selección de IDs
+      const leaderBasicFull: any[] = await prisma.$queryRaw`SELECT nombre FROM "Pokemon" WHERE id = ${parseInt(leaderId)} LIMIT 1`;
+      const leaderNameFull = leaderBasicFull.length > 0 ? leaderBasicFull[0].nombre : "Líder";
+      return NextResponse.json({
+        team: lockedDbPokemon,
+        validLockedIds,
+        aiReport: { estrategia: "Equipo completo con los Pokémon fijados.", ventajas: [], debilidades: [] },
+        builds: {},
+        isDynamicMode: false
+      });
     }
 
     const leaderBasic: any[] = await prisma.$queryRaw`SELECT nombre FROM "Pokemon" WHERE id = ${parseInt(leaderId)} LIMIT 1`;
@@ -298,26 +386,34 @@ export async function POST(request: Request) {
       `;
     }
 
-    const filtered = rawSuggestions.filter(p => {
-      const name = p.nombre.toLowerCase();
-      if (!config.allowParadox && PARADOX_LIST.includes(name)) return false;
-      if (!config.allowUB && UB_LIST.includes(name)) return false;
-      if (!config.allowMythical && MYTHICAL_LIST.includes(name)) return false;
-      if (!config.allowLegendaries && LEGENDARY_LIST.includes(name)) return false;
-      if (idInList(p.id, validLockedIds)) return false;
+    // FIX #3: usar SOLO isExcluded, sin lógica inline duplicada
+    let filtered = rawSuggestions.filter(p => {
+      if (isExcluded(p.nombre, config))        return false;
+      if (idInList(p.id, validLockedIds))       return false;
       if (idInList(p.id, normalizedIgnoredIds)) return false;
       return true;
     });
 
+    // FIX #2: aplicar filtro monotype en modo normal
+    if (config.isMonotype && config.monoTypeSelected) {
+      const mono = config.monoTypeSelected.toLowerCase();
+      filtered = applyMonotypeFilter(filtered, config);
+
+      if (filtered.length < slotsToFill) {
+        const existingIds = [...filtered.map((p: any) => p.id), ...validLockedIds, ...normalizedIgnoredIds, Number(leaderId)];
+        const extra = await expandMonotypePool(mono, config, existingIds, 40);
+        const seen  = new Set(filtered.map((p: any) => p.id));
+        for (const p of extra) { if (!seen.has(p.id)) { filtered.push(p); seen.add(p.id); } }
+      }
+    }
+
     const highMeta = filtered.filter(p => (p.usage_score ?? 0) > 20).slice(0, 14);
-    const viable   = filtered.filter(p => (p.usage_score ?? 0) > 3 && (p.usage_score ?? 0) <= 20).slice(0, 12);
+    const viable   = filtered.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 20).slice(0, 12);
     const niche    = filtered.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 4);
     const candidatePool = [...highMeta, ...viable, ...niche].map(p => ({ ...p, id: toNum(p.id) }));
 
-    const slotsToFill = 6 - validLockedIds.length;
-
     const candidatesString = candidatePool.map(c => {
-      const tier = c.tier || 'Unranked';
+      const tier  = c.tier || 'Unranked';
       const types = c.tipo2 ? `${c.tipo1}/${c.tipo2}` : c.tipo1;
       const usage = c.usage_score ? `${Number(c.usage_score).toFixed(1)}%` : '—';
       return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
@@ -336,7 +432,7 @@ export async function POST(request: Request) {
       LÍDER: ${leaderName}. ${leaderConstraints}
       FIJADOS:\n${lockedString}
 
-      CANDIDATOS (Vectorizados por Sinergia Matemática):
+      CANDIDATOS (${candidatePool.length} Pokémon, vectorizados por sinergia):
       ${candidatesString}
 
       --- MACRO-ESTRATEGIA ---
@@ -347,9 +443,8 @@ export async function POST(request: Request) {
       1. LEGALIDAD: NUNCA inventes ataques.
       ${itemClauseRule}
       ${ELITE_COMPETITIVE_RULES}
-      6. SOLO usa IDs de CANDIDATOS. NUNCA uses IDs externos a esa lista.
-
-      SELECCIONA EXACTAMENTE ${slotsToFill} IDs Y GENERA BUILDS PARA LOS 6 POKÉMON.
+      6. SOLO usa IDs de CANDIDATOS listados arriba. NUNCA uses IDs externos.
+         SELECCIONA EXACTAMENTE ${slotsToFill} IDs. No más, no menos.
 
       DEVUELVE SOLO JSON:
       {
