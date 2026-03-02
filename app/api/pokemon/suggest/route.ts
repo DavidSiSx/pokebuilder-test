@@ -24,13 +24,12 @@ const PARADOX_LIST   = ["great tusk","scream tail","brute bonnet","flutter mane"
 const UB_LIST        = ["nihilego","buzzwole","pheromosa","xurkitree","celesteela","kartana","guzzlord","poipole","naganadel","stakataka","blacephalon"];
 const MYTHICAL_LIST  = ["mew","celebi","jirachi","deoxys","phione","manaphy","darkrai","shaymin","arceus","victini","keldeo","meloetta","genesect","diancie","hoopa","volcanion","magearna","marshadow","zeraora","meltan","melmetal","zarude","pecharunt"];
 const LEGENDARY_LIST = ["articuno","zapdos","moltres","mewtwo","raikou","entei","suicune","lugia","ho-oh","regirock","regice","registeel","latias","latios","kyogre","groudon","rayquaza","uxie","mesprit","azelf","dialga","palkia","heatran","regigigas","giratina","cresselia","cobalion","terrakion","virizion","tornadus","thundurus","reshiram","zekrom","landorus","kyurem","xerneas","yveltal","zygarde","type: null","silvally","tapu koko","tapu lele","tapu bulu","tapu fini","cosmog","cosmoem","solgaleo","lunala","necrozma","zacian","zamazenta","eternatus","kubfu","urshifu","regieleki","regidrago","glastrier","spectrier","calyrex","enamorus","wo-chien","chien-pao","ting-lu","chi-yu","koraidon","miraidon","okidogi","munkidori","fezandipiti","ogerpon","terapagos"];
-
 const LITTLE_CUP_LIST = ["bulbasaur","charmander","squirtle","caterpie","weedle","pidgey","rattata","spearow","ekans","pichu","sandshrew","nidoran-f","nidoran-m","cleffa","vulpix","igglybuff","zubat","oddish","paras","venonat","diglett","meowth","psyduck","mankey","growlithe","poliwag","abra","machop","bellsprout","tentacool","geodude","ponyta","slowpoke","magnemite","farfetchd","doduo","seel","grimer","shellder","gastly","onix","drowzee","krabby","voltorb","exeggcute","cubone","koffing","rhyhorn","horsea","goldeen","staryu","mime-jr","smoochum","elekid","magby","dratini","togepi","chikorita","cyndaquil","totodile","sentret","hoothoot","ledyba","spinarak","chinchou","natu","mareep","marill","hoppip","sunkern","wooper","murkrow","misdreavus","unown","wynaut","girafarig","pineco","dunsparce","gligar","snubbull","slugma","swinub","corsola","remoraid","delibird","skarmory","houndour","phanpy","stantler","teddiursa","wingull","ralts","surskit","shroomish","slakoth","nincada","whismur","makuhita","azurill","nosepass","skitty","sableye","mawile","aron","meditite","electrike","plusle","minun","volbeat","illumise","budew","roselia","gulpin","carvanha","wailmer","trapinch","cacnea","swablu","zangoose","seviper","lunatone","solrock","barboach","corphish","baltoy","lileep","anorith","feebas","castform","kecleon","shuppet","duskull","tropius","snorunt","spheal","clamperl","relicanth","luvdisc","bagon","beldum","turtwig","chimchar","piplup","starly","bidoof","kricketot","shinx","cranidos","shieldon","burmy","cherubi","shellos","drifloon","buneary","glameow","chingling","stunky","bronzor","bonsly","happiny","chatot","spiritomb","gible","munchlax","riolu","hippopotas","skorupi","toxicroak","carnivine","finneon","mantyke","snover","rotom","snivy","tepig","oshawott","patrat","lillipup","purrloin","blitzle","roggenrola","woobat","drilbur","audino","timburr","tympole","throh","sawk","sewaddle","venipede","cottonee","petilil","sandile","darumaka","maractus","dwebble","scraggy","sigilyph","tirtouga","archen","trubbish","zorua","minccino","gothita","solosis","ducklett","vanillite","deerling","emolga","karrablast","foongus","frillish","alomomola","joltik","ferroseed","klink","tynamo","elgyem","litwick","axew","cubchoo","cryogonal","shelmet","stunfisk","mienfoo","druddigon","golett","pawniard","bouffalant","rufflet","vullaby","deino","larvesta","chespin","fennekin","froakie","bunnelby","fletchling","scatterbug","litleo","flabebe","skiddo","pancham","espurr","honedge","spritzee","swirlix","inkay","binacle","skrelp","clauncher","helioptile","tyrunt","amaura","hawlucha","dedenne","carbink","goomy","klefki","phantump","pumpkaboo","bergmite","noibat","rowlet","litten","popplio","pikipek","yungoos","grubbin","crabrawler","oricorio","cutiefly","rockruff","wishiwashi","mareanie","mudbray","dewpider","fomantis","morelull","salandit","stufful","bounsweet","comfey","oranguru","passimian","wimpod","sandygast","pyukumuku","type-null","jangmo-o","grookey","scorbunny","sobble","skwovet","wooloo","gossifleur","blipbug","nickit","chewtle","yamper","rolycoly","applin","silicobra","cramorant","arrokuda","toxel","sizzlipede","clobbopus","pincurchin","snom","stonjourner","eiscue","indeedee","morpeko","cufant","dreepy","sprigatito","fuecoco","quaxly","lechonk","tarountula","nymble","pawmi","tandemaus","fidough","shroodle","grafaiai","bramblin","toedscool","capsakid","rellor","flittle","tinkatink","charcadet","tadbulb","wattrel","maschiff","greavard","flamigo","klawf","nacli","glimmet","varoom","cyclizar","orthworm","revavroom","veluza","finizen","wiglett","tatsugiri","cetoddle","frigibax","gimmighoul","houndstone"];
 
 function toNum(id: any): number { return Number(id); }
 function idInList(id: any, list: number[]): boolean { return list.includes(toNum(id)); }
 
-// FIX: Eliminado "gemini-3-flash" que no existe. Reemplazado por "gemini-1.5-flash" como fallback real.
+// FIX: "gemini-3-flash" no existe — reemplazado por "gemini-1.5-flash"
 const MODEL_PRIORITY = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash"];
 
 async function generateWithFallback(prompt: string) {
@@ -58,13 +57,12 @@ async function getLegalMovesFromPokeAPI(pokemonName: string) {
   } catch { return null; }
 }
 
-// Normalizar config: unifica allowMythicals/allowMythical bajo allowMythicals
 function normalizeConfig(raw: any): any {
   const allowMythicals = raw.allowMythicals ?? raw.allowMythical ?? true;
   return { ...raw, allowMythicals, allowMythical: allowMythicals };
 }
 
-// isExcluded: ÚNICA fuente de verdad para exclusiones. No duplicar esta lógica.
+// isExcluded: ÚNICA fuente de verdad para exclusiones
 function isExcluded(nombre: string, config: any): boolean {
   const name = nombre.toLowerCase();
   if (!config.allowParadox     && PARADOX_LIST.includes(name))   return true;
@@ -84,7 +82,7 @@ function applyMonotypeFilter(pool: any[], config: any): any[] {
   );
 }
 
-// FIX: expandMonotypePool ahora usa parámetros seguros con Prisma (evita SQL injection)
+// FIX: filtrado de excludeIds en JS para evitar interpolación SQL insegura
 async function expandMonotypePool(mono: string, config: any, excludeIds: number[], limit: number): Promise<any[]> {
   try {
     const extra: any[] = await prisma.$queryRaw`
@@ -98,12 +96,21 @@ async function expandMonotypePool(mono: string, config: any, excludeIds: number[
       ORDER BY COALESCE(am.usage_score, 0) DESC
       LIMIT ${limit}
     `;
-    // FIX: filtrar excludeIds en JS en vez de interpolación raw en SQL
     return extra
       .filter(p => !excludeIds.includes(toNum(p.id)))
       .filter(p => !isExcluded(p.nombre, config))
       .map(p => ({ ...p, id: toNum(p.id) }));
   } catch { return []; }
+}
+
+// FIX: helper centralizado para deduplicar arrays por id
+function deduplicateById(arr: any[]): any[] {
+  const seen = new Set<number>();
+  return arr.filter(p => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
 }
 
 function buildModeModifiers(config: any): string {
@@ -134,7 +141,7 @@ function buildModeModifiers(config: any): string {
 
 function buildExperiencePrompt(level: string): string {
   if (level === 'novato') {
-    return `MODO NOVATO: Lenguaje accesible, usa analogías para explicar sinergias. Jerga técnica en inglés pero explícala la primera vez (ej: "Trick Room (campo que invierte el orden de velocidad)").`;
+    return `MODO NOVATO: Lenguaje accesible, usa analogías para explicar sinergias. Jerga técnica en inglés pero explícala la primera vez.`;
   }
   return `MODO EXPERTO: Conocimiento avanzado de Smogon/VGC asumido. Profundiza en matchups, speed tiers, damage calcs aproximados y win conditions. Sin explicaciones básicas.`;
 }
@@ -158,14 +165,78 @@ const ELITE_COMPETITIVE_RULES = `
      - SIEMPRE "Trick Room", "Tailwind", "Entry Hazards", "Setup Sweeper", "Speed Control", "Pivot", "Wallbreaker".
 `;
 
-// FIX: Helper para deduplicar un array por id, evitando duplicados en candidatePool y finalTeam
-function deduplicateById(arr: any[]): any[] {
-  const seen = new Set<number>();
-  return arr.filter(p => {
-    if (seen.has(p.id)) return false;
-    seen.add(p.id);
-    return true;
-  });
+// ─────────────────────────────────────────────────────────────────
+// PASO 2: Genera el reporte DESPUÉS de confirmar el equipo real.
+//
+// Este es el fix central al bug de "reporte menciona Pokémon que
+// no están en el equipo": antes, el reporte se generaba junto con
+// la selección, cuando la IA no sabía cuál sería el equipo final.
+// Ahora el reporte se genera en una segunda llamada, con el equipo
+// 100% confirmado — así solo puede mencionar los 6 miembros reales.
+// ─────────────────────────────────────────────────────────────────
+async function generateReport(
+  confirmedTeam: any[],
+  config: any,
+  experiencePrompt: string,
+  modeModifiers: string,
+  buildsJson: string
+): Promise<any> {
+  const teamString = confirmedTeam
+    .map(p => {
+      const types = p.tipo2 ? `${p.tipo1}/${p.tipo2}` : (p.tipo1 || 'Normal');
+      return `- ${p.nombre} (${types})`;
+    })
+    .join('\n');
+
+  const reportPrompt = `
+    Eres el Analista Táctico Principal de un equipo campeón mundial de Pokémon.
+    FORMATO: ${config.format} | MODIFICADORES: ${modeModifiers}
+    NIVEL DE ANÁLISIS: ${experiencePrompt}
+
+    EQUIPO FINAL CONFIRMADO (EXACTAMENTE ESTOS ${confirmedTeam.length} POKÉMON):
+    ${teamString}
+
+    BUILDS ASIGNADAS:
+    ${buildsJson}
+
+    REGLA ABSOLUTA: Tu análisis SOLO puede mencionar los Pokémon listados arriba.
+    PROHIBIDO mencionar cualquier Pokémon que no esté en este equipo.
+    Analiza sinergias, debilidades y estrategia EXCLUSIVAMENTE con estos miembros.
+
+    DEVUELVE SOLO JSON:
+    {
+      "estrategia": "descripción táctica del equipo",
+      "ventajas": ["ventaja 1", "ventaja 2", "ventaja 3"],
+      "debilidades": ["debilidad 1", "debilidad 2"],
+      "leads": [
+        { "pokemon": "nombre exacto", "condicion_uso": "cuándo usar como lead", "condicion_cambio": "cuándo cambiar" }
+      ]
+    }
+  `;
+
+  try {
+    const result = await generateWithFallback(reportPrompt);
+    const jsonMatch = result.response.text().match(/\{[\s\S]*\}/);
+    if (!jsonMatch) return buildFallbackReport(confirmedTeam);
+    return JSON.parse(jsonMatch[0]);
+  } catch {
+    return buildFallbackReport(confirmedTeam);
+  }
+}
+
+// Fallback si la segunda llamada falla — siempre menciona solo el equipo real
+function buildFallbackReport(confirmedTeam: any[]): any {
+  const names = confirmedTeam.map(p => p.nombre);
+  return {
+    estrategia: `Equipo conformado por ${names.join(', ')}. Analiza sus sinergias de tipos y roles para definir la estrategia óptima.`,
+    ventajas: ["Equipo generado con sinergia vectorial", "Builds competitivas asignadas"],
+    debilidades: ["Revisar cobertura de tipos manualmente"],
+    leads: confirmedTeam.slice(0, 2).map(p => ({
+      pokemon: p.nombre,
+      condicion_uso: "Lead según matchup del rival",
+      condicion_cambio: "Cambiar si hay desventaja de tipo clara"
+    }))
+  };
 }
 
 export async function POST(request: Request) {
@@ -185,7 +256,6 @@ export async function POST(request: Request) {
 
     const { leaderId, config: rawConfig, lockedIds = [], ignoredIds = [], scratchMode = false } = await request.json();
 
-    // Normalizar config UNA VEZ antes de cualquier uso
     const config = normalizeConfig(rawConfig);
 
     if (!API_KEY) return NextResponse.json({ error: "Falta API Key" }, { status: 500 });
@@ -213,7 +283,6 @@ export async function POST(request: Request) {
         LIMIT 150
       `;
 
-      // Validar lockedIds contra reglas de exclusión
       const validScratchLockedIds: number[] = [];
       if (normalizedLockedIds.length > 0) {
         const lockedPokemon = await prisma.pokemon.findMany({ where: { id: { in: normalizedLockedIds } } });
@@ -222,18 +291,15 @@ export async function POST(request: Request) {
         }
       }
 
-      // Filtrar pool: excluidos, ignorados, ya fijados
       let filteredPool = rawPool
         .filter(p => !idInList(p.id, normalizedIgnoredIds))
         .filter(p => !idInList(p.id, validScratchLockedIds))
         .filter(p => !isExcluded(p.nombre, config))
         .map(p => ({ ...p, id: toNum(p.id) }));
 
-      // Aplicar filtro monotype en scratch mode
       if (config.isMonotype && config.monoTypeSelected) {
         const mono = config.monoTypeSelected.toLowerCase();
         filteredPool = applyMonotypeFilter(filteredPool, config);
-
         if (filteredPool.length < 6) {
           const existingIds = [...filteredPool.map(p => p.id), ...validScratchLockedIds, ...normalizedIgnoredIds];
           const extra = await expandMonotypePool(mono, config, existingIds, 40);
@@ -246,10 +312,9 @@ export async function POST(request: Request) {
       const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 15).slice(0, 14);
       const niche    = filteredPool.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 6);
 
-      // FIX: deduplicar candidatePool por ID antes de enviarlo a la IA
+      // FIX: deduplicar candidatePool antes de enviarlo a la IA
       const candidatePool = deduplicateById([...highMeta, ...viable, ...niche]);
 
-      // Calcular slots necesarios
       const slotsNeeded = Math.max(0, 6 - validScratchLockedIds.length);
       if (slotsNeeded === 0) {
         const lockedFull = await prisma.pokemon.findMany({ where: { id: { in: validScratchLockedIds } } });
@@ -263,7 +328,10 @@ export async function POST(request: Request) {
         return `[ID: ${c.id}] ${c.nombre} (${types}) | Tier: ${tier} | Usage: ${usage}`;
       }).join('\n');
 
-      const scratchPrompt = `
+      // ── PASO 1: Selección de IDs y builds ────────────────────────
+      // El prompt NO pide reporte para evitar que la IA "imagine"
+      // miembros que luego no estarán en el equipo real.
+      const selectionPrompt = `
         Eres el Analista Táctico Principal de un equipo campeón mundial de Pokémon.
         FORMATO: ${config.format} | CLÁUSULAS: ${config.clauses?.join(', ')}.
         MODIFICADORES: ${modeModifiers}
@@ -271,26 +339,18 @@ export async function POST(request: Request) {
         NIVEL DE ANÁLISIS: ${experiencePrompt}
 
         CANDIDATOS DISPONIBLES (${candidatePool.length} Pokémon):
-        SI NO HAY CANDIDATOS SUFICIENTES ELIGE AQUELLOS QUE NO TENGAN DATOS COMPETITIVOS SI ES NECESARIO, PERO NUNCA INVENTES NOMBRES NI DATOS.
-        CRUCIAL: NUNCA REPITAS POKEMONS, SI ES NECESARIO USA POKEMONS MAS DE NICHO, PERO ASEGURA VARIEDAD ESTRATÉGICA Y OPTIM
+        CRUCIAL: NUNCA REPITAS POKEMONS. ASEGURA VARIEDAD ESTRATÉGICA.
         ${candidatesString}
-
-        --- MACRO-ESTRATEGIA ---
-        - 6 Pokémon que funcionen como ecosistema. Núcleos FWG o Hada/Dragón/Acero.
-        - Speed Control y/o Hazard Control según el formato.
-        - IVs correctos (0 Atk para Special Attackers, 0 Spe para Trick Room).
 
         --- REGLAS ESTRICTAS ---
         1. LEGALIDAD: NUNCA inventes ataques ni habilidades.
         ${itemClauseRule}
         ${ELITE_COMPETITIVE_RULES}
-        6. SOLO usa IDs de CANDIDATOS DISPONIBLES listados arriba. NUNCA inventes IDs ni uses IDs externos.
-           SELECCIONA EXACTAMENTE ${slotsNeeded} IDs DISTINTOS para completar el equipo. PROHIBIDO REPETIR IDs.
+        6. SOLO usa IDs de CANDIDATOS DISPONIBLES listados arriba. NUNCA inventes IDs.
+           SELECCIONA EXACTAMENTE ${slotsNeeded} IDs DISTINTOS. PROHIBIDO REPETIR IDs.
 
-        DEVUELVE SOLO JSON:
+        DEVUELVE SOLO JSON (sin reporte, solo selección y builds):
         {
-          "report": { "estrategia": "...", "ventajas": ["..."], "debilidades": ["..."],
-            "leads": [{ "pokemon": "...", "condicion_uso": "...", "condicion_cambio": "..." }] },
           "selected_ids": [123, 456, 789, 321, 654, 987],
           "builds": {
             "123": { "item": "...", "ability": "...", "nature": "...", "evs": "...", "ivs": "...", "moves": ["...", "...", "...", "..."], "teraType": "..." }
@@ -298,28 +358,41 @@ export async function POST(request: Request) {
         }
       `;
 
-      const result = await generateWithFallback(scratchPrompt);
-      const jsonMatch = result.response.text().match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error("JSON inválido");
-      const aiData = JSON.parse(jsonMatch[0]);
+      const selectionResult = await generateWithFallback(selectionPrompt);
+      const selectionMatch = selectionResult.response.text().match(/\{[\s\S]*\}/);
+      if (!selectionMatch) throw new Error("JSON inválido en selección");
+      const selectionData = JSON.parse(selectionMatch[0]);
 
-      // FIX: Deduplicar selected_ids antes de filtrar — corrige el error de TypeScript y los duplicados
-      const selectedNums: number[] = [...new Set<number>((aiData.selected_ids || []).map(Number))];
+      // FIX: Set<number> tipado explícito — corrige el error de TypeScript en build
+      const selectedNums: number[] = [...new Set<number>((selectionData.selected_ids || []).map(Number))];
 
-      // FIX: Deduplicar finalTeam por ID
+      // FIX: deduplicar finalTeam por ID
       let finalTeam = deduplicateById(candidatePool.filter(p => selectedNums.includes(p.id)));
-
       if (finalTeam.length < slotsNeeded) {
         const usedIds = new Set(finalTeam.map(p => p.id));
         const extras = candidatePool.filter(p => !usedIds.has(p.id)).slice(0, slotsNeeded - finalTeam.length);
         finalTeam = [...finalTeam, ...extras];
       }
 
+      // ── PASO 2: Reporte con el equipo real confirmado ─────────────
+      const lockedTeamData = validScratchLockedIds.length > 0
+        ? await prisma.pokemon.findMany({ where: { id: { in: validScratchLockedIds } } })
+        : [];
+      const fullTeam = [...lockedTeamData, ...finalTeam];
+
+      const aiReport = await generateReport(
+        fullTeam,
+        config,
+        experiencePrompt,
+        modeModifiers,
+        JSON.stringify(selectionData.builds || {}, null, 2)
+      );
+
       return NextResponse.json({
         team: finalTeam,
         validLockedIds: validScratchLockedIds,
-        aiReport: aiData.report,
-        builds: aiData.builds,
+        aiReport,
+        builds: selectionData.builds,
         isDynamicMode: false
       });
     }
@@ -387,7 +460,6 @@ export async function POST(request: Request) {
       `;
     }
 
-    // Filtrar usando isExcluded como única fuente de verdad
     let filtered = rawSuggestions.filter(p => {
       if (isExcluded(p.nombre, config))        return false;
       if (idInList(p.id, validLockedIds))       return false;
@@ -395,11 +467,9 @@ export async function POST(request: Request) {
       return true;
     });
 
-    // Aplicar filtro monotype en modo normal
     if (config.isMonotype && config.monoTypeSelected) {
       const mono = config.monoTypeSelected.toLowerCase();
       filtered = applyMonotypeFilter(filtered, config);
-
       if (filtered.length < slotsToFill) {
         const existingIds = [...filtered.map((p: any) => p.id), ...validLockedIds, ...normalizedIgnoredIds, Number(leaderId)];
         const extra = await expandMonotypePool(mono, config, existingIds, 40);
@@ -427,7 +497,8 @@ export async function POST(request: Request) {
       .map(p => `[ID: ${toNum(p.id)}] ${p.nombre}`)
       .join('\n');
 
-    const prompt = `
+    // ── PASO 1: Selección de IDs y builds ────────────────────────
+    const selectionPrompt = `
       Eres el Analista Táctico Principal de un equipo campeón mundial de Pokémon.
       FORMATO: ${config.format} | CLÁUSULAS: ${config.clauses.join(', ')}.
       MODIFICADORES: ${modeModifiers}
@@ -435,12 +506,8 @@ export async function POST(request: Request) {
       LÍDER: ${leaderName}. ${leaderConstraints}
       FIJADOS:\n${lockedString}
 
-      CANDIDATOS (${candidatePool.length} Pokémon, vectorizados por sinergia):
+      CANDIDATOS (${candidatePool.length} Pokémon, vectorizados por sinergia con el líder):
       ${candidatesString}
-
-      --- MACRO-ESTRATEGIA ---
-      - Cierra núcleos FWG o FDS basados en el Líder.
-      - Speed Control o Soporte si el Líder lo requiere.
 
       --- REGLAS ESTRICTAS ---
       1. LEGALIDAD: NUNCA inventes ataques.
@@ -449,10 +516,8 @@ export async function POST(request: Request) {
       6. SOLO usa IDs de CANDIDATOS listados arriba. NUNCA uses IDs externos.
          SELECCIONA EXACTAMENTE ${slotsToFill} IDs DISTINTOS. PROHIBIDO REPETIR IDs.
 
-      DEVUELVE SOLO JSON:
+      DEVUELVE SOLO JSON (sin reporte, solo selección y builds):
       {
-        "report": { "estrategia": "...", "ventajas": ["..."], "debilidades": ["..."],
-          "leads": [{ "pokemon": "...", "condicion_uso": "...", "condicion_cambio": "..." }] },
         "selected_ids": [123, 456],
         "builds": {
           "123": { "item": "...", "ability": "...", "nature": "...", "evs": "...", "ivs": "...", "moves": ["...", "...", "...", "..."], "teraType": "..." }
@@ -460,24 +525,43 @@ export async function POST(request: Request) {
       }
     `;
 
-    const result = await generateWithFallback(prompt);
-    const jsonMatch = result.response.text().match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error("JSON inválido");
-    const aiData = JSON.parse(jsonMatch[0]);
+    const selectionResult = await generateWithFallback(selectionPrompt);
+    const selectionMatch = selectionResult.response.text().match(/\{[\s\S]*\}/);
+    if (!selectionMatch) throw new Error("JSON inválido en selección");
+    const selectionData = JSON.parse(selectionMatch[0]);
 
-    // FIX: Deduplicar selected_ids — corrige el error de TypeScript y los duplicados
-    const selectedNums: number[] = [...new Set<number>((aiData.selected_ids || []).map(Number))];
+    // FIX: Set<number> tipado explícito — corrige el error de TypeScript en build
+    const selectedNums: number[] = [...new Set<number>((selectionData.selected_ids || []).map(Number))];
 
-    // FIX: Deduplicar finalTeamObjects por ID
+    // FIX: deduplicar finalTeamObjects por ID
     let finalTeamObjects = deduplicateById(candidatePool.filter(p => selectedNums.includes(p.id)));
-
     if (finalTeamObjects.length < slotsToFill) {
       const usedIds = new Set(finalTeamObjects.map(p => p.id));
       const extras = candidatePool.filter(p => !usedIds.has(p.id)).slice(0, slotsToFill - finalTeamObjects.length);
       finalTeamObjects = [...finalTeamObjects, ...extras];
     }
 
-    return NextResponse.json({ team: finalTeamObjects, validLockedIds, aiReport: aiData.report, builds: aiData.builds, isDynamicMode });
+    // ── PASO 2: Reporte con el equipo real confirmado ─────────────
+    const fullTeam = [
+      ...lockedDbPokemon.filter(p => validLockedIds.includes(toNum(p.id))),
+      ...finalTeamObjects
+    ];
+
+    const aiReport = await generateReport(
+      fullTeam,
+      config,
+      experiencePrompt,
+      modeModifiers,
+      JSON.stringify(selectionData.builds || {}, null, 2)
+    );
+
+    return NextResponse.json({
+      team: finalTeamObjects,
+      validLockedIds,
+      aiReport,
+      builds: selectionData.builds,
+      isDynamicMode
+    });
 
   } catch (error: any) {
     if (error.status === 429) {
