@@ -248,7 +248,13 @@ export async function POST(request: Request) {
       const highMeta = filteredPool.filter(p => (p.usage_score ?? 0) > 15).slice(0, 20);
       const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 15).slice(0, 14);
       const niche    = filteredPool.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 6);
-      const candidatePool = [...highMeta, ...viable, ...niche];
+      // FIX DUPLICATES: dedup candidatePool by ID to prevent the AI from seeing the same Pokemon twice
+      const seenCandidateIds = new Set<number>();
+      const candidatePool = [...highMeta, ...viable, ...niche].filter(p => {
+        if (seenCandidateIds.has(p.id)) return false;
+        seenCandidateIds.add(p.id);
+        return true;
+      });
 
       // FIX #4: validar que hay suficientes slots para llenar
       const slotsNeeded = Math.max(0, 6 - validScratchLockedIds.length);
@@ -282,10 +288,13 @@ export async function POST(request: Request) {
 
         --- REGLAS ESTRICTAS ---
         1. LEGALIDAD: NUNCA inventes ataques ni habilidades.
+        2. SPECIES CLAUSE / CERO DUPLICADOS: Cada Pokémon DEBE ser una especie DIFERENTE. NUNCA repitas el mismo ID ni el mismo nombre.
+           selected_ids DEBE tener EXACTAMENTE ${slotsNeeded} IDs y TODOS DISTINTOS entre sí.
         ${itemClauseRule}
         ${ELITE_COMPETITIVE_RULES}
         6. SOLO usa IDs de CANDIDATOS DISPONIBLES listados arriba. NUNCA inventes IDs ni uses IDs externos.
            SELECCIONA EXACTAMENTE ${slotsNeeded} IDs para completar el equipo.
+        7. COHERENCIA DEL REPORTE: En "estrategia", "ventajas", "debilidades" y "leads" SOLO menciona Pokémon que estén en selected_ids. NUNCA menciones Pokémon que NO hayas seleccionado.
 
         DEVUELVE SOLO JSON:
         {
@@ -303,10 +312,20 @@ export async function POST(request: Request) {
       if (!jsonMatch) throw new Error("JSON inválido");
       const aiData = JSON.parse(jsonMatch[0]);
 
-      const selectedNums: number[] = (aiData.selected_ids || []).map(Number);
+      // FIX DUPLICATES: deduplicate selected_ids from AI response
+      const selectedNums: number[] = [...new Set((aiData.selected_ids || []).map(Number))];
       let finalTeam = candidatePool.filter(p => selectedNums.includes(p.id));
+      // Deduplicate finalTeam by ID (in case candidatePool somehow had dupes)
+      const finalSeenIds = new Set<number>();
+      finalTeam = finalTeam.filter(p => {
+        if (finalSeenIds.has(p.id)) return false;
+        finalSeenIds.add(p.id);
+        return true;
+      });
       if (finalTeam.length < slotsNeeded) {
-        finalTeam = [...finalTeam, ...candidatePool.filter(p => !selectedNums.includes(p.id)).slice(0, slotsNeeded - finalTeam.length)];
+        const usedIds = new Set(finalTeam.map(p => p.id));
+        const fillers = candidatePool.filter(p => !usedIds.has(p.id));
+        finalTeam = [...finalTeam, ...fillers.slice(0, slotsNeeded - finalTeam.length)];
       }
 
       return NextResponse.json({
@@ -410,7 +429,13 @@ export async function POST(request: Request) {
     const highMeta = filtered.filter(p => (p.usage_score ?? 0) > 20).slice(0, 14);
     const viable   = filtered.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 20).slice(0, 12);
     const niche    = filtered.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 4);
-    const candidatePool = [...highMeta, ...viable, ...niche].map(p => ({ ...p, id: toNum(p.id) }));
+    // FIX DUPLICATES: dedup candidatePool by ID
+    const seenNormalIds = new Set<number>();
+    const candidatePool = [...highMeta, ...viable, ...niche].map(p => ({ ...p, id: toNum(p.id) })).filter(p => {
+      if (seenNormalIds.has(p.id)) return false;
+      seenNormalIds.add(p.id);
+      return true;
+    });
 
     const candidatesString = candidatePool.map(c => {
       const tier  = c.tier || 'Unranked';
@@ -441,10 +466,13 @@ export async function POST(request: Request) {
 
       --- REGLAS ESTRICTAS ---
       1. LEGALIDAD: NUNCA inventes ataques.
+      2. SPECIES CLAUSE / CERO DUPLICADOS: Cada Pokémon DEBE ser una especie DIFERENTE. NUNCA repitas el mismo ID ni el mismo nombre.
+         selected_ids DEBE tener EXACTAMENTE ${slotsToFill} IDs y TODOS DISTINTOS entre sí, y DISTINTOS de los Pokémon FIJADOS.
       ${itemClauseRule}
       ${ELITE_COMPETITIVE_RULES}
       6. SOLO usa IDs de CANDIDATOS listados arriba. NUNCA uses IDs externos.
          SELECCIONA EXACTAMENTE ${slotsToFill} IDs. No más, no menos.
+      7. COHERENCIA DEL REPORTE: En "estrategia", "ventajas", "debilidades" y "leads" SOLO menciona Pokémon que estén en selected_ids o en los FIJADOS. NUNCA menciones Pokémon que NO estén en el equipo final.
 
       DEVUELVE SOLO JSON:
       {
@@ -462,10 +490,21 @@ export async function POST(request: Request) {
     if (!jsonMatch) throw new Error("JSON inválido");
     const aiData = JSON.parse(jsonMatch[0]);
 
-    const selectedNums: number[] = (aiData.selected_ids || []).map(Number);
+    // FIX DUPLICATES: deduplicate selected_ids and also exclude locked IDs
+    const selectedNums: number[] = [...new Set((aiData.selected_ids || []).map(Number))]
+      .filter(id => !validLockedIds.includes(id)); // exclude already-locked Pokemon
     let finalTeamObjects = candidatePool.filter(p => selectedNums.includes(p.id));
+    // Deduplicate finalTeamObjects by ID
+    const finalNormalSeenIds = new Set<number>();
+    finalTeamObjects = finalTeamObjects.filter(p => {
+      if (finalNormalSeenIds.has(p.id)) return false;
+      finalNormalSeenIds.add(p.id);
+      return true;
+    });
     if (finalTeamObjects.length < slotsToFill) {
-      finalTeamObjects = [...finalTeamObjects, ...candidatePool.filter(p => !selectedNums.includes(p.id)).slice(0, slotsToFill - finalTeamObjects.length)];
+      const usedIds = new Set([...finalTeamObjects.map(p => p.id), ...validLockedIds]);
+      const fillers = candidatePool.filter(p => !usedIds.has(p.id));
+      finalTeamObjects = [...finalTeamObjects, ...fillers.slice(0, slotsToFill - finalTeamObjects.length)];
     }
 
     return NextResponse.json({ team: finalTeamObjects, validLockedIds, aiReport: aiData.report, builds: aiData.builds, isDynamicMode });

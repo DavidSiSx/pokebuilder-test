@@ -26,6 +26,12 @@
     "react-joyride": "^2.9.3",
     "tailwind-merge": "^3.5.0"
   },
+  "overrides": {
+    "react-joyride": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^20",
