@@ -25,13 +25,13 @@ const UB_LIST        = ["nihilego","buzzwole","pheromosa","xurkitree","celesteel
 const MYTHICAL_LIST  = ["mew","celebi","jirachi","deoxys","phione","manaphy","darkrai","shaymin","arceus","victini","keldeo","meloetta","genesect","diancie","hoopa","volcanion","magearna","marshadow","zeraora","meltan","melmetal","zarude","pecharunt"];
 const LEGENDARY_LIST = ["articuno","zapdos","moltres","mewtwo","raikou","entei","suicune","lugia","ho-oh","regirock","regice","registeel","latias","latios","kyogre","groudon","rayquaza","uxie","mesprit","azelf","dialga","palkia","heatran","regigigas","giratina","cresselia","cobalion","terrakion","virizion","tornadus","thundurus","reshiram","zekrom","landorus","kyurem","xerneas","yveltal","zygarde","type: null","silvally","tapu koko","tapu lele","tapu bulu","tapu fini","cosmog","cosmoem","solgaleo","lunala","necrozma","zacian","zamazenta","eternatus","kubfu","urshifu","regieleki","regidrago","glastrier","spectrier","calyrex","enamorus","wo-chien","chien-pao","ting-lu","chi-yu","koraidon","miraidon","okidogi","munkidori","fezandipiti","ogerpon","terapagos"];
 
-// Pre-evoluciones permitidas en Little Cup
-const LITTLE_CUP_LIST = ["bulbasaur","charmander","squirtle","caterpie","weedle","pidgey","rattata","spearow","ekans","pichu","sandshrew","nidoran-f","nidoran-m","cleffa","vulpix","igglybuff","zubat","oddish","paras","venonat","diglett","meowth","psyduck","mankey","growlithe","poliwag","abra","machop","bellsprout","tentacool","geodude","ponyta","slowpoke","magnemite","farfetchd","doduo","seel","grimer","shellder","gastly","onix","drowzee","krabby","voltorb","exeggcute","cubone","koffing","rhyhorn","horsea","goldeen","staryu","mime-jr","smoochum","elekid","magby","dratini","togepi","chikorita","cyndaquil","totodile","sentret","hoothoot","ledyba","spinarak","chinchou","pichu","cleffa","igglybuff","togepi","natu","mareep","marill","hoppip","sunkern","wooper","murkrow","misdreavus","unown","wynaut","girafarig","pineco","dunsparce","gligar","snubbull","slugma","swinub","corsola","remoraid","delibird","skarmory","houndour","phanpy","stantler","teddiursa","wingull","ralts","surskit","shroomish","slakoth","nincada","whismur","makuhita","azurill","nosepass","skitty","sableye","mawile","aron","meditite","electrike","plusle","minun","volbeat","illumise","budew","roselia","gulpin","carvanha","wailmer","trapinch","cacnea","swablu","zangoose","seviper","lunatone","solrock","barboach","corphish","baltoy","lileep","anorith","feebas","castform","kecleon","shuppet","duskull","tropius","wynaut","snorunt","spheal","clamperl","relicanth","luvdisc","bagon","beldum","turtwig","chimchar","piplup","starly","bidoof","kricketot","shinx","budew","cranidos","shieldon","burmy","cherubi","shellos","drifloon","buneary","glameow","chingling","stunky","bronzor","bonsly","mime-jr","happiny","chatot","spiritomb","gible","munchlax","riolu","hippopotas","skorupi","toxicroak","carnivine","finneon","mantyke","snover","rotom","uxie","mesprit","azelf","snivy","tepig","oshawott","patrat","lillipup","purrloin","blitzle","roggenrola","woobat","drilbur","audino","timburr","tympole","throh","sawk","sewaddle","venipede","cottonee","petilil","sandile","darumaka","maractus","dwebble","scraggy","sigilyph","tirtouga","archen","trubbish","zorua","minccino","gothita","solosis","ducklett","vanillite","deerling","emolga","karrablast","foongus","frillish","alomomola","joltik","ferroseed","klink","tynamo","elgyem","litwick","axew","cubchoo","cryogonal","shelmet","stunfisk","mienfoo","druddigon","golett","pawniard","bouffalant","rufflet","vullaby","deino","larvesta","chespin","fennekin","froakie","bunnelby","fletchling","scatterbug","litleo","flabebe","skiddo","pancham","espurr","honedge","spritzee","swirlix","inkay","binacle","skrelp","clauncher","helioptile","tyrunt","amaura","hawlucha","dedenne","carbink","goomy","klefki","phantump","pumpkaboo","bergmite","noibat","rowlet","litten","popplio","pikipek","yungoos","grubbin","crabrawler","oricorio","cutiefly","rockruff","wishiwashi","mareanie","mudbray","dewpider","fomantis","morelull","salandit","stufful","bounsweet","comfey","oranguru","passimian","wimpod","sandygast","pyukumuku","type-null","jangmo-o","grookey","scorbunny","sobble","skwovet","wooloo","gossifleur","blipbug","nickit","chewtle","yamper","rolycoly","applin","silicobra","cramorant","arrokuda","toxel","sizzlipede","clobbopus","pincurchin","snom","stonjourner","eiscue","indeedee","morpeko","cufant","dreepy","sprigatito","fuecoco","quaxly","lechonk","tarountula","nymble","pawmi","tandemaus","fidough","shroodle","grafaiai","bramblin","toedscool","capsakid","rellor","flittle","tinkatink","charcadet","tadbulb","wattrel","maschiff","shrugly","greavard","flamigo","klawf","nacli","glimmet","varoom","cyclizar","orthworm","shieldon","revavroom","veluza","finizen","wiglett","tatsugiri","cetoddle","frigibax","gimmighoul","greavard","houndstone"];
+const LITTLE_CUP_LIST = ["bulbasaur","charmander","squirtle","caterpie","weedle","pidgey","rattata","spearow","ekans","pichu","sandshrew","nidoran-f","nidoran-m","cleffa","vulpix","igglybuff","zubat","oddish","paras","venonat","diglett","meowth","psyduck","mankey","growlithe","poliwag","abra","machop","bellsprout","tentacool","geodude","ponyta","slowpoke","magnemite","farfetchd","doduo","seel","grimer","shellder","gastly","onix","drowzee","krabby","voltorb","exeggcute","cubone","koffing","rhyhorn","horsea","goldeen","staryu","mime-jr","smoochum","elekid","magby","dratini","togepi","chikorita","cyndaquil","totodile","sentret","hoothoot","ledyba","spinarak","chinchou","natu","mareep","marill","hoppip","sunkern","wooper","murkrow","misdreavus","unown","wynaut","girafarig","pineco","dunsparce","gligar","snubbull","slugma","swinub","corsola","remoraid","delibird","skarmory","houndour","phanpy","stantler","teddiursa","wingull","ralts","surskit","shroomish","slakoth","nincada","whismur","makuhita","azurill","nosepass","skitty","sableye","mawile","aron","meditite","electrike","plusle","minun","volbeat","illumise","budew","roselia","gulpin","carvanha","wailmer","trapinch","cacnea","swablu","zangoose","seviper","lunatone","solrock","barboach","corphish","baltoy","lileep","anorith","feebas","castform","kecleon","shuppet","duskull","tropius","snorunt","spheal","clamperl","relicanth","luvdisc","bagon","beldum","turtwig","chimchar","piplup","starly","bidoof","kricketot","shinx","cranidos","shieldon","burmy","cherubi","shellos","drifloon","buneary","glameow","chingling","stunky","bronzor","bonsly","happiny","chatot","spiritomb","gible","munchlax","riolu","hippopotas","skorupi","toxicroak","carnivine","finneon","mantyke","snover","rotom","snivy","tepig","oshawott","patrat","lillipup","purrloin","blitzle","roggenrola","woobat","drilbur","audino","timburr","tympole","throh","sawk","sewaddle","venipede","cottonee","petilil","sandile","darumaka","maractus","dwebble","scraggy","sigilyph","tirtouga","archen","trubbish","zorua","minccino","gothita","solosis","ducklett","vanillite","deerling","emolga","karrablast","foongus","frillish","alomomola","joltik","ferroseed","klink","tynamo","elgyem","litwick","axew","cubchoo","cryogonal","shelmet","stunfisk","mienfoo","druddigon","golett","pawniard","bouffalant","rufflet","vullaby","deino","larvesta","chespin","fennekin","froakie","bunnelby","fletchling","scatterbug","litleo","flabebe","skiddo","pancham","espurr","honedge","spritzee","swirlix","inkay","binacle","skrelp","clauncher","helioptile","tyrunt","amaura","hawlucha","dedenne","carbink","goomy","klefki","phantump","pumpkaboo","bergmite","noibat","rowlet","litten","popplio","pikipek","yungoos","grubbin","crabrawler","oricorio","cutiefly","rockruff","wishiwashi","mareanie","mudbray","dewpider","fomantis","morelull","salandit","stufful","bounsweet","comfey","oranguru","passimian","wimpod","sandygast","pyukumuku","type-null","jangmo-o","grookey","scorbunny","sobble","skwovet","wooloo","gossifleur","blipbug","nickit","chewtle","yamper","rolycoly","applin","silicobra","cramorant","arrokuda","toxel","sizzlipede","clobbopus","pincurchin","snom","stonjourner","eiscue","indeedee","morpeko","cufant","dreepy","sprigatito","fuecoco","quaxly","lechonk","tarountula","nymble","pawmi","tandemaus","fidough","shroodle","grafaiai","bramblin","toedscool","capsakid","rellor","flittle","tinkatink","charcadet","tadbulb","wattrel","maschiff","greavard","flamigo","klawf","nacli","glimmet","varoom","cyclizar","orthworm","revavroom","veluza","finizen","wiglett","tatsugiri","cetoddle","frigibax","gimmighoul","houndstone"];
 
 function toNum(id: any): number { return Number(id); }
 function idInList(id: any, list: number[]): boolean { return list.includes(toNum(id)); }
 
-const MODEL_PRIORITY = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-3-flash"];
+// FIX: Eliminado "gemini-3-flash" que no existe. Reemplazado por "gemini-1.5-flash" como fallback real.
+const MODEL_PRIORITY = ["gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-1.5-flash"];
 
 async function generateWithFallback(prompt: string) {
   let lastError = null;
@@ -58,36 +58,23 @@ async function getLegalMovesFromPokeAPI(pokemonName: string) {
   } catch { return null; }
 }
 
-// ─────────────────────────────────────────────────────────────────
-// FIX #1: Normalizar el config antes de cualquier uso.
-// El frontend puede enviar allowMythicals (plural) o allowMythical (singular).
-// Esta función unifica ambos bajo allowMythicals para uso interno.
-// ─────────────────────────────────────────────────────────────────
+// Normalizar config: unifica allowMythicals/allowMythical bajo allowMythicals
 function normalizeConfig(raw: any): any {
   const allowMythicals = raw.allowMythicals ?? raw.allowMythical ?? true;
   return { ...raw, allowMythicals, allowMythical: allowMythicals };
 }
 
-// ─────────────────────────────────────────────────────────────────
-// FIX #3: isExcluded es la ÚNICA fuente de verdad para exclusiones.
-// Toda la app llama a esta función — no hay lógica inline duplicada.
-// ─────────────────────────────────────────────────────────────────
+// isExcluded: ÚNICA fuente de verdad para exclusiones. No duplicar esta lógica.
 function isExcluded(nombre: string, config: any): boolean {
   const name = nombre.toLowerCase();
   if (!config.allowParadox     && PARADOX_LIST.includes(name))   return true;
   if (!config.allowUB          && UB_LIST.includes(name))        return true;
-  if (!config.allowMythicals   && MYTHICAL_LIST.includes(name))  return true; // FIX #1
+  if (!config.allowMythicals   && MYTHICAL_LIST.includes(name))  return true;
   if (!config.allowLegendaries && LEGENDARY_LIST.includes(name)) return true;
-  // FIX #6: Little Cup solo admite pre-evoluciones de la lista
   if (config.isLittleCup && !LITTLE_CUP_LIST.includes(name))    return true;
   return false;
 }
 
-// ─────────────────────────────────────────────────────────────────
-// FIX #2 + #5: Filtro de monotype aplicado AL POOL antes del prompt.
-// Funciona en modo normal y scratch. Incluye expansión de pool si
-// hay menos de N candidatos del tipo requerido.
-// ─────────────────────────────────────────────────────────────────
 function applyMonotypeFilter(pool: any[], config: any): any[] {
   if (!config.isMonotype || !config.monoTypeSelected) return pool;
   const mono = config.monoTypeSelected.toLowerCase();
@@ -97,8 +84,8 @@ function applyMonotypeFilter(pool: any[], config: any): any[] {
   );
 }
 
+// FIX: expandMonotypePool ahora usa parámetros seguros con Prisma (evita SQL injection)
 async function expandMonotypePool(mono: string, config: any, excludeIds: number[], limit: number): Promise<any[]> {
-  const excludePlaceholder = excludeIds.length > 0 ? excludeIds : [0];
   try {
     const extra: any[] = await prisma.$queryRaw`
       SELECT p.id, p.nombre, p.tipo1, p.tipo2,
@@ -108,11 +95,12 @@ async function expandMonotypePool(mono: string, config: any, excludeIds: number[
       FROM "Pokemon" p
       LEFT JOIN "AnalisisMeta" am ON p.id = am.pokemon_id
       WHERE (LOWER(p.tipo1) = ${mono} OR LOWER(p.tipo2) = ${mono})
-        AND p.id NOT IN (${excludePlaceholder.join(',')})
       ORDER BY COALESCE(am.usage_score, 0) DESC
       LIMIT ${limit}
     `;
+    // FIX: filtrar excludeIds en JS en vez de interpolación raw en SQL
     return extra
+      .filter(p => !excludeIds.includes(toNum(p.id)))
       .filter(p => !isExcluded(p.nombre, config))
       .map(p => ({ ...p, id: toNum(p.id) }));
   } catch { return []; }
@@ -122,7 +110,6 @@ function buildModeModifiers(config: any): string {
   let m = "";
   if (config.isLittleCup)  m += " FORMATO LITTLE CUP (Solo pre-evoluciones nivel 5, sin stone evolutiva).";
   if (config.isRandomizer) m += " ESTRATEGIAS CAÓTICAS Y RANDOM.";
-  // FIX #2: el prompt ahora aclara que el pool YA está pre-filtrado
   if (config.isMonotype && config.monoTypeSelected) {
     m += ` MODO MONOTYPE: TODOS los Pokémon DEBEN ser de tipo ${config.monoTypeSelected}. El pool de candidatos YA está pre-filtrado por ese tipo, TODOS los IDs disponibles son válidos.`;
   }
@@ -171,6 +158,16 @@ const ELITE_COMPETITIVE_RULES = `
      - SIEMPRE "Trick Room", "Tailwind", "Entry Hazards", "Setup Sweeper", "Speed Control", "Pivot", "Wallbreaker".
 `;
 
+// FIX: Helper para deduplicar un array por id, evitando duplicados en candidatePool y finalTeam
+function deduplicateById(arr: any[]): any[] {
+  const seen = new Set<number>();
+  return arr.filter(p => {
+    if (seen.has(p.id)) return false;
+    seen.add(p.id);
+    return true;
+  });
+}
+
 export async function POST(request: Request) {
   try {
     const { user, error: authError } = await requireAuth();
@@ -188,7 +185,7 @@ export async function POST(request: Request) {
 
     const { leaderId, config: rawConfig, lockedIds = [], ignoredIds = [], scratchMode = false } = await request.json();
 
-    // FIX #1: normalizar config UNA VEZ, antes de cualquier uso
+    // Normalizar config UNA VEZ antes de cualquier uso
     const config = normalizeConfig(rawConfig);
 
     if (!API_KEY) return NextResponse.json({ error: "Falta API Key" }, { status: 500 });
@@ -216,7 +213,7 @@ export async function POST(request: Request) {
         LIMIT 150
       `;
 
-      // FIX #7: en scratch, validar lockedIds contra reglas de exclusión
+      // Validar lockedIds contra reglas de exclusión
       const validScratchLockedIds: number[] = [];
       if (normalizedLockedIds.length > 0) {
         const lockedPokemon = await prisma.pokemon.findMany({ where: { id: { in: normalizedLockedIds } } });
@@ -225,14 +222,14 @@ export async function POST(request: Request) {
         }
       }
 
-      // FIX #3: usar isExcluded como única fuente de verdad
+      // Filtrar pool: excluidos, ignorados, ya fijados
       let filteredPool = rawPool
         .filter(p => !idInList(p.id, normalizedIgnoredIds))
-        .filter(p => !idInList(p.id, validScratchLockedIds)) // excluir los ya fijados del pool de candidatos
+        .filter(p => !idInList(p.id, validScratchLockedIds))
         .filter(p => !isExcluded(p.nombre, config))
         .map(p => ({ ...p, id: toNum(p.id) }));
 
-      // FIX #5: aplicar filtro monotype en scratch mode
+      // Aplicar filtro monotype en scratch mode
       if (config.isMonotype && config.monoTypeSelected) {
         const mono = config.monoTypeSelected.toLowerCase();
         filteredPool = applyMonotypeFilter(filteredPool, config);
@@ -248,12 +245,13 @@ export async function POST(request: Request) {
       const highMeta = filteredPool.filter(p => (p.usage_score ?? 0) > 15).slice(0, 20);
       const viable   = filteredPool.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 15).slice(0, 14);
       const niche    = filteredPool.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 6);
-      const candidatePool = [...highMeta, ...viable, ...niche];
 
-      // FIX #4: validar que hay suficientes slots para llenar
+      // FIX: deduplicar candidatePool por ID antes de enviarlo a la IA
+      const candidatePool = deduplicateById([...highMeta, ...viable, ...niche]);
+
+      // Calcular slots necesarios
       const slotsNeeded = Math.max(0, 6 - validScratchLockedIds.length);
       if (slotsNeeded === 0) {
-        // Todos los slots están fijados — no llamar a la IA, devolver directamente
         const lockedFull = await prisma.pokemon.findMany({ where: { id: { in: validScratchLockedIds } } });
         return NextResponse.json({ team: lockedFull, validLockedIds: validScratchLockedIds, aiReport: null, builds: {}, isDynamicMode: false });
       }
@@ -273,6 +271,8 @@ export async function POST(request: Request) {
         NIVEL DE ANÁLISIS: ${experiencePrompt}
 
         CANDIDATOS DISPONIBLES (${candidatePool.length} Pokémon):
+        SI NO HAY CANDIDATOS SUFICIENTES ELIGE AQUELLOS QUE NO TENGAN DATOS COMPETITIVOS SI ES NECESARIO, PERO NUNCA INVENTES NOMBRES NI DATOS.
+        CRUCIAL: NUNCA REPITAS POKEMONS, SI ES NECESARIO USA POKEMONS MAS DE NICHO, PERO ASEGURA VARIEDAD ESTRATÉGICA Y OPTIM
         ${candidatesString}
 
         --- MACRO-ESTRATEGIA ---
@@ -285,7 +285,7 @@ export async function POST(request: Request) {
         ${itemClauseRule}
         ${ELITE_COMPETITIVE_RULES}
         6. SOLO usa IDs de CANDIDATOS DISPONIBLES listados arriba. NUNCA inventes IDs ni uses IDs externos.
-           SELECCIONA EXACTAMENTE ${slotsNeeded} IDs para completar el equipo.
+           SELECCIONA EXACTAMENTE ${slotsNeeded} IDs DISTINTOS para completar el equipo. PROHIBIDO REPETIR IDs.
 
         DEVUELVE SOLO JSON:
         {
@@ -303,10 +303,16 @@ export async function POST(request: Request) {
       if (!jsonMatch) throw new Error("JSON inválido");
       const aiData = JSON.parse(jsonMatch[0]);
 
-      const selectedNums: number[] = (aiData.selected_ids || []).map(Number);
-      let finalTeam = candidatePool.filter(p => selectedNums.includes(p.id));
+      // FIX: Deduplicar selected_ids antes de filtrar — corrige el error de TypeScript y los duplicados
+      const selectedNums: number[] = [...new Set<number>((aiData.selected_ids || []).map(Number))];
+
+      // FIX: Deduplicar finalTeam por ID
+      let finalTeam = deduplicateById(candidatePool.filter(p => selectedNums.includes(p.id)));
+
       if (finalTeam.length < slotsNeeded) {
-        finalTeam = [...finalTeam, ...candidatePool.filter(p => !selectedNums.includes(p.id)).slice(0, slotsNeeded - finalTeam.length)];
+        const usedIds = new Set(finalTeam.map(p => p.id));
+        const extras = candidatePool.filter(p => !usedIds.has(p.id)).slice(0, slotsNeeded - finalTeam.length);
+        finalTeam = [...finalTeam, ...extras];
       }
 
       return NextResponse.json({
@@ -325,7 +331,6 @@ export async function POST(request: Request) {
     const validLockedIds: number[] = [];
 
     for (const p of lockedDbPokemon) {
-      // FIX #3: usar isExcluded, no lógica inline
       if (!isExcluded(p.nombre, config)) {
         validLockedIds.push(toNum(p.id));
       }
@@ -335,12 +340,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "REGLA_VIOLADA", message: "Tu líder viola las exclusiones actuales." }, { status: 400 });
     }
 
-    // FIX #4: calcular slotsToFill antes del prompt y validarlo
     const slotsToFill = 6 - validLockedIds.length;
     if (slotsToFill === 0) {
-      // Equipo completo con fijados — generar solo builds, sin selección de IDs
-      const leaderBasicFull: any[] = await prisma.$queryRaw`SELECT nombre FROM "Pokemon" WHERE id = ${parseInt(leaderId)} LIMIT 1`;
-      const leaderNameFull = leaderBasicFull.length > 0 ? leaderBasicFull[0].nombre : "Líder";
       return NextResponse.json({
         team: lockedDbPokemon,
         validLockedIds,
@@ -386,7 +387,7 @@ export async function POST(request: Request) {
       `;
     }
 
-    // FIX #3: usar SOLO isExcluded, sin lógica inline duplicada
+    // Filtrar usando isExcluded como única fuente de verdad
     let filtered = rawSuggestions.filter(p => {
       if (isExcluded(p.nombre, config))        return false;
       if (idInList(p.id, validLockedIds))       return false;
@@ -394,7 +395,7 @@ export async function POST(request: Request) {
       return true;
     });
 
-    // FIX #2: aplicar filtro monotype en modo normal
+    // Aplicar filtro monotype en modo normal
     if (config.isMonotype && config.monoTypeSelected) {
       const mono = config.monoTypeSelected.toLowerCase();
       filtered = applyMonotypeFilter(filtered, config);
@@ -410,7 +411,9 @@ export async function POST(request: Request) {
     const highMeta = filtered.filter(p => (p.usage_score ?? 0) > 20).slice(0, 14);
     const viable   = filtered.filter(p => (p.usage_score ?? 0) > 3  && (p.usage_score ?? 0) <= 20).slice(0, 12);
     const niche    = filtered.filter(p => (p.usage_score ?? 0) <= 3).slice(0, 4);
-    const candidatePool = [...highMeta, ...viable, ...niche].map(p => ({ ...p, id: toNum(p.id) }));
+
+    // FIX: deduplicar candidatePool por ID antes de enviarlo a la IA
+    const candidatePool = deduplicateById([...highMeta, ...viable, ...niche].map(p => ({ ...p, id: toNum(p.id) })));
 
     const candidatesString = candidatePool.map(c => {
       const tier  = c.tier || 'Unranked';
@@ -444,7 +447,7 @@ export async function POST(request: Request) {
       ${itemClauseRule}
       ${ELITE_COMPETITIVE_RULES}
       6. SOLO usa IDs de CANDIDATOS listados arriba. NUNCA uses IDs externos.
-         SELECCIONA EXACTAMENTE ${slotsToFill} IDs. No más, no menos.
+         SELECCIONA EXACTAMENTE ${slotsToFill} IDs DISTINTOS. PROHIBIDO REPETIR IDs.
 
       DEVUELVE SOLO JSON:
       {
@@ -462,10 +465,16 @@ export async function POST(request: Request) {
     if (!jsonMatch) throw new Error("JSON inválido");
     const aiData = JSON.parse(jsonMatch[0]);
 
-    const selectedNums: number[] = (aiData.selected_ids || []).map(Number);
-    let finalTeamObjects = candidatePool.filter(p => selectedNums.includes(p.id));
+    // FIX: Deduplicar selected_ids — corrige el error de TypeScript y los duplicados
+    const selectedNums: number[] = [...new Set<number>((aiData.selected_ids || []).map(Number))];
+
+    // FIX: Deduplicar finalTeamObjects por ID
+    let finalTeamObjects = deduplicateById(candidatePool.filter(p => selectedNums.includes(p.id)));
+
     if (finalTeamObjects.length < slotsToFill) {
-      finalTeamObjects = [...finalTeamObjects, ...candidatePool.filter(p => !selectedNums.includes(p.id)).slice(0, slotsToFill - finalTeamObjects.length)];
+      const usedIds = new Set(finalTeamObjects.map(p => p.id));
+      const extras = candidatePool.filter(p => !usedIds.has(p.id)).slice(0, slotsToFill - finalTeamObjects.length);
+      finalTeamObjects = [...finalTeamObjects, ...extras];
     }
 
     return NextResponse.json({ team: finalTeamObjects, validLockedIds, aiReport: aiData.report, builds: aiData.builds, isDynamicMode });
